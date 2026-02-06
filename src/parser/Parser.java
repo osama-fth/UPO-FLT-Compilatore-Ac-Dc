@@ -22,7 +22,7 @@ import token.TokenType;
 
 public class Parser {
 
-	Scanner scanner;
+	private Scanner scanner;
 
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;
@@ -31,11 +31,6 @@ public class Parser {
 	/**
 	 * Analizza i dati in ingresso per creare un "NodeProgram". Questo metodo avvia
 	 * l'analisi del codice e verifica che non ci siano errori di scrittura.
-	 *
-	 * @return un oggetto NodeProgram che rappresenta la struttura del programma
-	 *         analizzato.
-	 * @throws SyntacticException se viene riscontrato un errore di grammatica o di
-	 *                            punteggiatura (errore lessicale o sintattico).
 	 */
 	public NodeProgram parse() throws SyntacticException {
 		return this.parsePrg();
@@ -46,13 +41,6 @@ public class Parser {
 	 * atteso. Se i due tipi corrispondono, l'elemento viene accettato e rimosso
 	 * dalla coda. In caso contrario, genera un'eccezione (SyntacticException) per
 	 * segnalare l'errore.
-	 *
-	 * @param expected il tipo di elemento che ci si aspetta di trovare.
-	 * @return il prossimo elemento se corrisponde a quello atteso.
-	 * @throws SyntacticException se l'elemento trovato è diverso da quello
-	 *                            previsto.
-	 * @throws LexicalException   se viene riscontrato un errore di scrittura
-	 *                            durante la lettura dell'elemento.
 	 */
 	private Token match(TokenType expected) throws SyntacticException {
 		try {
@@ -71,11 +59,6 @@ public class Parser {
 
 	/**
 	 * Analizza il simbolo iniziale "Prg" della grammatica. Prg -> DSs $
-	 *
-	 * @return un oggetto NodeProgram che rappresenta l'intera struttura del
-	 *         programma analizzato.
-	 * @throws SyntacticException se viene riscontrato un errore di scrittura o di
-	 *                            grammatica (errore lessicale o sintattico).
 	 */
 	private NodeProgram parsePrg() throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -91,13 +74,7 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "DSs" della grammatica. DSs -> Dcl DSs |
-	 * Stm DSs | ϵ
-	 *
-	 * @return una lista di oggetti NodeDecSt che rappresenta la struttura
-	 *         analizzata.
-	 * @throws SyntacticException se viene riscontrato un errore di scrittura o di
-	 *                            grammatica (errore lessicale o sintattico).
+	 * Analizza il simbolo non-terminale "DSs" della grammatica. DSs -> Dcl DSs | Stm DSs | ϵ
 	 */
 	private ArrayList<NodeDecSt> parseDSs() throws SyntacticException {
 		Token tk;
@@ -132,12 +109,7 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Dcl" della grammatica. Regola: Dcl -> Ty
-	 * ID DclP
-	 *
-	 * @return un oggetto NodeDecl che rappresenta la dichiarazione analizzata.
-	 * @throws SyntacticException se viene riscontrato un errore di scrittura o di
-	 *                            grammatica (errore lessicale o sintattico).
+	 * Analizza il simbolo non-terminale "Dcl" della grammatica. Regola: Dcl -> Ty ID DclP
 	 */
 	private NodeDecl parseDcl() throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -153,10 +125,7 @@ public class Parser {
 	}
 
 	/**
-	 * Parses the non-terminal DclP of the grammar. DclP -> ; | = Exp ;
-	 *
-	 * @return a NodeExpr representing the parsed structure, or null if DclP -> ;.
-	 * @throws SyntacticException if a lexical or syntactic error is encountered.
+	 * Analizza il simbolo non-terminale DclP della grammatica. DclP -> ; | = Exp ;
 	 */
 	private NodeExpr parseDclP() throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -179,12 +148,7 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Stm" (Istruzione) della grammatica. Stm ->
-	 * id Op Exp ; | print id ;
-	 *
-	 * @return un oggetto NodeStm che rappresenta l'istruzione analizzata.
-	 * @throws SyntacticException se viene riscontrato un errore di scrittura o di
-	 *                            grammatica (errore lessicale o sintattico).
+	 * Analizza il simbolo non-terminale "Stm" (Istruzione) della grammatica. Stm -> id Op Exp ; | print id ;
 	 */
 	private NodeStm parseStm() throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -243,12 +207,7 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Exp" (Espressione) della grammatica. Exp
-	 * -> Tr ExpP
-	 *
-	 * @return un oggetto NodeExpr che rappresenta l'espressione analizzata.
-	 * @throws SyntacticException se viene riscontrato un errore di scrittura o di
-	 *                            grammatica (errore lessicale o sintattico).
+	 * Analizza il simbolo non-terminale "Exp" (Espressione) della grammatica. Exp -> Tr ExpP
 	 */
 	private NodeExpr parseExp() throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -265,14 +224,7 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "ExpP" (il resto dell'espressione) della
-	 * grammatica. ExpP -> + Tr ExpP | - Tr ExpP | ϵ
-	 *
-	 * @param left l'operando di sinistra dell'espressione, già analizzato dal
-	 *             metodo precedente.
-	 * @return un oggetto NodeExpr che rappresenta l'espressione completa.
-	 * @throws SyntacticException se viene riscontrato un errore di scrittura o di
-	 *                            grammatica (errore lessicale o sintattico).
+	 * Analizza il simbolo non-terminale "ExpP" (il resto dell'espressione) della grammatica. ExpP -> + Tr ExpP | - Tr ExpP | ϵ
 	 */
 	private NodeExpr parseExpP(NodeExpr left) throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -301,15 +253,7 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Tr" (Termine) della grammatica. Tr -> Val
-	 * TrP
-	 *
-	 * @return un oggetto NodeExpr che rappresenta la struttura del termine
-	 *         analizzato.
-	 * @throws SyntacticException se viene riscontrato un errore di grammatica
-	 *                            (sintattico).
-	 * @throws LexicalException   se viene riscontrato un errore di scrittura dei
-	 *                            simboli (lessicale).
+	 * Analizza il simbolo non-terminale "Tr" (Termine) della grammatica. Tr -> Val TrP
 	 */
 	private NodeExpr parseTr() throws SyntacticException {
 		Token tk;
@@ -332,19 +276,8 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "TrP" (il resto del termine) della
-	 * grammatica. Regola: TrP -> * Val TrP | / Val TrP | ϵ * Questo metodo gestisce
-	 * le operazioni di moltiplicazione e divisione che seguono un valore
-	 * principale, costruendo una catena di operazioni. Se non sono presenti né
-	 * moltiplicazioni né divisioni, restituisce l'espressione già esistente.
-	 * * @param left l'espressione di sinistra a cui verranno applicate le
-	 * operazioni successive.
-	 *
-	 * @return un oggetto NodeExpr che rappresenta la struttura analizzata.
-	 * @throws SyntacticException se viene riscontrato un errore di grammatica
-	 *                            (sintattico).
-	 * @throws LexicalException   se viene riscontrato un errore di scrittura
-	 *                            (lessicale).
+	 * Analizza il simbolo non-terminale "TrP" (il resto del termine) della grammatica. 
+	 * Regola: TrP -> * Val TrP | / Val TrP | ϵ 
 	 */
 	private NodeExpr parseTrP(NodeExpr left) throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -374,13 +307,7 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Ty" (Tipo) della grammatica. Regola: Ty ->
-	 * float | int * @return un oggetto LangType che rappresenta il tipo di dato
-	 * riconosciuto (decimale o intero).
-	 *
-	 * @return
-	 * @throws SyntacticException se viene riscontrato un errore di scrittura o di
-	 *                            grammatica (errore lessicale o sintattico).
+	 * Analizza il simbolo non-terminale "Ty" (Tipo) della grammatica. Regola: Ty -> float | int 
 	 */
 	private LangType parseTy() throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -403,13 +330,7 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Val" (Valore) della grammatica. Regola:
-	 * Val -> INT | FLOAT | ID
-	 *
-	 * @return un oggetto NodeExpr che rappresenta il valore o la variabile
-	 *         analizzata.
-	 * @throws SyntacticException se viene riscontrato un errore di scrittura o di
-	 *                            grammatica (errore lessicale o sintattico).
+	 * Analizza il simbolo non-terminale "Val" (Valore) della grammatica. Regola: Val -> INT | FLOAT | ID
 	 */
 	private NodeExpr parseVal() throws SyntacticException {
 		Token tk;
@@ -439,10 +360,7 @@ public class Parser {
 	}
 
 	/**
-	 * Parses the non-terminal Op of the grammar. Op -> = | +=
-	 *
-	 * @return a Token representing the parsed operator.
-	 * @throws SyntacticException if a lexical or syntactic error is encountered.
+	 * Analizzail simbolo non-terminale Op della grammatica. Op -> = | opAss
 	 */
 	private Token parseOp() throws SyntacticException {
 		Token tk;

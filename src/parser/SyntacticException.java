@@ -2,6 +2,7 @@ package parser;
 
 import token.TokenType;
 
+@SuppressWarnings("serial")
 public class SyntacticException extends Exception {
 
 	public SyntacticException(int riga, String atteso, TokenType ottenuto) {

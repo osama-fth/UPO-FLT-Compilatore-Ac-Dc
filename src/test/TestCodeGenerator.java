@@ -1,17 +1,18 @@
 package test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ast.NodeProgram;
 import parser.Parser;
 import scanner.Scanner;
-import ast.NodeProgram;
 import symbolTable.SymbolTable;
 import visitor.CodeGeneratorVisitor;
-import visitor.TypeCheckinVisitor;
 import visitor.Registri;
+import visitor.TypeCheckinVisitor;
 
 class TestCodeGenerator {
 
@@ -38,7 +39,6 @@ class TestCodeGenerator {
 		assertTrue(codeGen.getLog().isEmpty());
 		assertFalse(codeGen.getCodiceDc().isEmpty());
 	}
-	
 
 	@Test
 	void testDivisioni() throws Exception {

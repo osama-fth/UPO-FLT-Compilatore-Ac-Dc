@@ -3,25 +3,25 @@ package ast;
 import visitor.IVisitor;
 
 public class NodeConst extends NodeExpr {
-	private String valore;
-	private LangType tipo;
-
+	private String value;
+	private LangType type;
+	
 	public NodeConst(String valore, LangType tipo) {
-		this.valore = valore;
-		this.tipo = tipo;
+		this.value = valore;
+		this.type = tipo;
 	}
 
 	public LangType getTipo() {
-		return this.tipo;
+		return this.type;
 	}
 
 	public String getValore() {
-		return valore;
+		return value;
 	}
 
 	@Override
 	public String toString() {
-		return "NodeConst [valore=" + valore + ", tipo=" + tipo + "]";
+		return "NodeConst [valore=" + value + ", tipo=" + type + "]";
 	}
 
 	@Override

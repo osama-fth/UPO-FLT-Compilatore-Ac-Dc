@@ -1,5 +1,6 @@
 package scanner;
 
+@SuppressWarnings("serial")
 public class LexicalException extends Exception {
 
 	// Costruttore per carattere illegale generico

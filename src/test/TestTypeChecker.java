@@ -27,99 +27,98 @@ import visitor.VoidType;
 
 class TestTypeChecker {
 
-	private TypeCheckinVisitor checker;
+	private TypeCheckinVisitor typChecker;
 
 	@BeforeEach
 	void setUp() {
-		checker = new TypeCheckinVisitor();
+		typChecker = new TypeCheckinVisitor();
 		SymbolTable.clearTable();
 	}
 
 	@Test
 	void testDeclCorretto() {
 		NodeDecl node = new NodeDecl(new NodeId("var1"), LangType.INT, null);
-		checker.visit(node);
-		assertEquals(IntType.class, checker.getResType().getClass());
+		typChecker.visit(node);
+		assertEquals(IntType.class, typChecker.getResType().getClass());
 		assertEquals(LangType.INT, node.getId().getSymbolAttributes().getTipo());
 	}
 
 	@Test
 	void testDeclAlreadyDeclared() {
 		NodeDecl node = new NodeDecl(new NodeId("var1"), LangType.INT, null);
-		checker.visit(node);
-		checker.visit(node);
-		assertEquals(new ErrorType("Errore semantico: var1 già dichiarato!"), (checker.getResType()));
+		typChecker.visit(node);
+		typChecker.visit(node);
+		assertEquals(new ErrorType("Errore semantico: var1 già dichiarato!"), (typChecker.getResType()));
 	}
 
 	@Test
 	void testPrintCorretto() {
 		NodeDecl node = new NodeDecl(new NodeId("var1"), LangType.INT, null);
 		NodePrint nodePrint = new NodePrint(new NodeId("var1"));
-		checker.visit(node);
-		checker.visit(nodePrint);
-		assertEquals(VoidType.class, checker.getResType().getClass());
+		typChecker.visit(node);
+		typChecker.visit(nodePrint);
+		assertEquals(VoidType.class, typChecker.getResType().getClass());
 	}
 
 	@Test
 	void testPrintVariabileNotDichiarata() {
 		NodePrint nodePrint = new NodePrint(new NodeId("var1"));
-		checker.visit(nodePrint);
-		assertEquals(new ErrorType("Errore semantico: var1 non è stato dichiarato!"),
-				(checker.getResType()));
+		typChecker.visit(nodePrint);
+		assertEquals(new ErrorType("Errore semantico: var1 non è stato dichiarato!"), (typChecker.getResType()));
 	}
 
 	@Test
 	void testNodeDerefTipoCorretto() {
 		NodeDecl node = new NodeDecl(new NodeId("var1"), LangType.INT, null);
-		checker.visit(node);
+		typChecker.visit(node);
 		NodeDeref nodeDeref = new NodeDeref(new NodeId("var1"));
-		checker.visit(nodeDeref);
-		assertEquals(IntType.class, checker.getResType().getClass());
+		typChecker.visit(nodeDeref);
+		assertEquals(IntType.class, typChecker.getResType().getClass());
 	}
 
 	@Test
 	void testNodeDerefVariableNonDechiarata() {
 		NodeDeref nodeDeref = new NodeDeref(new NodeId("var1"));
-		checker.visit(nodeDeref);
-		assertEquals(new ErrorType("Errore semantico: var1 non è stato dichiarato!"), checker.getResType());
+		typChecker.visit(nodeDeref);
+		assertEquals(new ErrorType("Errore semantico: var1 non è stato dichiarato!"), typChecker.getResType());
 	}
 
 	@Test
 	void testConstFloat() {
 		NodeConst n = new NodeConst("42.0", LangType.FLOAT);
-		checker.visit(n);
-		assertEquals(FloatType.class, checker.getResType().getClass());
+		typChecker.visit(n);
+		assertEquals(FloatType.class, typChecker.getResType().getClass());
 	}
 
 	@Test
 	void testConstInt() {
 		NodeConst n = new NodeConst("11", LangType.INT);
-		checker.visit(n);
-		assertEquals(IntType.class, checker.getResType().getClass());
+		typChecker.visit(n);
+		assertEquals(IntType.class, typChecker.getResType().getClass());
 	}
 
 	@Test
 	void testNodeBinOpStessoTipo() {
 		NodeBinOp node = new NodeBinOp(LangOperation.PLUS, new NodeConst("1", LangType.INT),
 				new NodeConst("1", LangType.INT));
-		checker.visit(node);
-		assertEquals(IntType.class, checker.getResType().getClass());
+		typChecker.visit(node);
+		assertEquals(IntType.class, typChecker.getResType().getClass());
 	}
 
 	@Test
 	void testNodeBinOpTipoCompatibile() {
 		NodeBinOp node = new NodeBinOp(LangOperation.PLUS, new NodeConst("1", LangType.FLOAT),
 				new NodeConst("1", LangType.INT));
-		checker.visit(node);
-		assertEquals(FloatType.class, checker.getResType().getClass());
+		typChecker.visit(node);
+		assertEquals(FloatType.class, typChecker.getResType().getClass());
 	}
 
 	@Test
 	void testNodeBinOpDivisioneSpeciale() {
 		NodeBinOp node = new NodeBinOp(LangOperation.DIVIDE, new NodeConst("1", LangType.FLOAT),
 				new NodeConst("1", LangType.INT));
-		checker.visit(node);
-		assertEquals(FloatType.class, checker.getResType().getClass());
+		typChecker.visit(node);
+		assertEquals(FloatType.class, typChecker.getResType().getClass());
 		assertEquals(LangOperation.DIV_FLOAT, node.getOp());
 	}
 
@@ -127,69 +126,69 @@ class TestTypeChecker {
 	void testNodeBinOpTipoIncompatibile() {
 		NodeBinOp node = new NodeBinOp(LangOperation.DIVIDE, new NodeConst("1", LangType.INT),
 				new NodeConst("1", LangType.FLOAT));
-		checker.visit(node);
-		assertEquals(FloatType.class, checker.getResType().getClass());
+		typChecker.visit(node);
+		assertEquals(FloatType.class, typChecker.getResType().getClass());
 	}
 
 	@Test
 	void testNodeAssignIdIntCorretto() {
-		NodeDecl node = new NodeDecl(new NodeId("variable_name"), LangType.INT, null);
-		checker.visit(node);
-		NodeAssign nodeAssign = new NodeAssign(new NodeId("variable_name"), new NodeConst("1", LangType.INT));
-		checker.visit(nodeAssign);
-		assertEquals(IntType.class, checker.getResType().getClass());
+		NodeDecl node = new NodeDecl(new NodeId("var1"), LangType.INT, null);
+		typChecker.visit(node);
+		NodeAssign nodeAssign = new NodeAssign(new NodeId("var1"), new NodeConst("1", LangType.INT));
+		typChecker.visit(nodeAssign);
+		assertEquals(IntType.class, typChecker.getResType().getClass());
 	}
 
 	@Test
 	void testNodeAssigIdIntExprFloatCorretto() {
-		NodeDecl node = new NodeDecl(new NodeId("variable_name"), LangType.INT, null);
-		checker.visit(node);
-		NodeAssign nodeAssign = new NodeAssign(new NodeId("variable_name"), new NodeConst("1.1", LangType.FLOAT));
-		checker.visit(nodeAssign);
+		NodeDecl node = new NodeDecl(new NodeId("var1"), LangType.INT, null);
+		typChecker.visit(node);
+		NodeAssign nodeAssign = new NodeAssign(new NodeId("var1"), new NodeConst("1.1", LangType.FLOAT));
+		typChecker.visit(nodeAssign);
 		assertEquals(new ErrorType("Errore semantico: assegnamento a tipo non corrispondente!"),
-				(checker.getResType()));
+				(typChecker.getResType()));
 	}
 
 	@Test
 	void testNodeAssignIdFloatCorretto() {
-		NodeDecl node = new NodeDecl(new NodeId("variable_name"), LangType.FLOAT, null);
-		checker.visit(node);
-		NodeAssign nodeAssign = new NodeAssign(new NodeId("variable_name"), new NodeConst("1", LangType.FLOAT));
-		checker.visit(nodeAssign);
-		assertEquals(FloatType.class, checker.getResType().getClass());
+		NodeDecl node = new NodeDecl(new NodeId("var1"), LangType.FLOAT, null);
+		typChecker.visit(node);
+		NodeAssign nodeAssign = new NodeAssign(new NodeId("var1"), new NodeConst("1", LangType.FLOAT));
+		typChecker.visit(nodeAssign);
+		assertEquals(FloatType.class, typChecker.getResType().getClass());
 	}
 
 	@Test
 	void testNodeAssignIdFloatExprIntIncorretto() {
-		NodeDecl node = new NodeDecl(new NodeId("variable_name"), LangType.FLOAT, null);
-		checker.visit(node);
-		NodeAssign nodeAssign = new NodeAssign(new NodeId("variable_name"), new NodeConst("1", LangType.INT));
-		checker.visit(nodeAssign);
-		assertEquals(FloatType.class, checker.getResType().getClass());
+		NodeDecl node = new NodeDecl(new NodeId("var1"), LangType.FLOAT, null);
+		typChecker.visit(node);
+		NodeAssign nodeAssign = new NodeAssign(new NodeId("var1"), new NodeConst("1", LangType.INT));
+		typChecker.visit(nodeAssign);
+		assertEquals(FloatType.class, typChecker.getResType().getClass());
 	}
 
 	@Test
 	void testNodeAssignBinExpressionCorretto() {
-		NodeDecl node = new NodeDecl(new NodeId("variable_name"), LangType.FLOAT, null);
-		checker.visit(node);
+		NodeDecl node = new NodeDecl(new NodeId("var1"), LangType.FLOAT, null);
+		typChecker.visit(node);
 		NodeBinOp nodeExpr = new NodeBinOp(LangOperation.DIVIDE, new NodeConst("1", LangType.FLOAT),
 				new NodeConst("1", LangType.INT));
-		NodeAssign nodeAssign = new NodeAssign(new NodeId("variable_name"), nodeExpr);
-		checker.visit(nodeAssign);
-		assertEquals(FloatType.class, checker.getResType().getClass());
+		NodeAssign nodeAssign = new NodeAssign(new NodeId("var1"), nodeExpr);
+		typChecker.visit(nodeAssign);
+		assertEquals(FloatType.class, typChecker.getResType().getClass());
 	}
 
 	@Test
 	void testNodeAssignBinExpressionNoncorretto() {
-		NodeDecl node = new NodeDecl(new NodeId("variable_name"), LangType.FLOAT, null);
-		checker.visit(node);
+		NodeDecl node = new NodeDecl(new NodeId("var1"), LangType.FLOAT, null);
+		typChecker.visit(node);
 		NodeBinOp nodeExpr = new NodeBinOp(LangOperation.DIVIDE, new NodeConst("1", LangType.INT),
 				new NodeConst("1", LangType.FLOAT));
-		checker.visit(nodeExpr);
-		assertEquals(FloatType.class, checker.getResType().getClass());
-		NodeAssign nodeAssign = new NodeAssign(new NodeId("variable_name"), nodeExpr);
-		checker.visit(nodeAssign);
-		assertEquals(FloatType.class, checker.getResType().getClass());
+		typChecker.visit(nodeExpr);
+		assertEquals(FloatType.class, typChecker.getResType().getClass());
+		NodeAssign nodeAssign = new NodeAssign(new NodeId("var1"), nodeExpr);
+		typChecker.visit(nodeAssign);
+		assertEquals(FloatType.class, typChecker.getResType().getClass());
 	}
 
 	@Test
@@ -197,8 +196,8 @@ class TestTypeChecker {
 		assertDoesNotThrow(() -> {
 			Parser parser = new Parser(new Scanner("src/test/data/testTypeChecker/1_dicRipetute.txt"));
 			NodeProgram result = parser.parse();
-			checker.visit(result);
-			assertEquals(new ErrorType("Errore semantico: a già dichiarato!"), checker.getResType());
+			typChecker.visit(result);
+			assertEquals(new ErrorType("Errore semantico: a già dichiarato!"), typChecker.getResType());
 		});
 
 	}
@@ -208,8 +207,8 @@ class TestTypeChecker {
 		assertDoesNotThrow(() -> {
 			Parser parser = new Parser(new Scanner("src/test/data/testTypeChecker/2_idNonDec.txt"));
 			NodeProgram result = parser.parse();
-			checker.visit(result);
-			assertEquals(new ErrorType("Errore semantico: b non è stato dichiarato!"), checker.getResType());
+			typChecker.visit(result);
+			assertEquals(new ErrorType("Errore semantico: b non è stato dichiarato!"), typChecker.getResType());
 		});
 	}
 
@@ -218,8 +217,8 @@ class TestTypeChecker {
 		assertDoesNotThrow(() -> {
 			Parser parser = new Parser(new Scanner("src/test/data/testTypeChecker/3_idNonDec.txt"));
 			NodeProgram result = parser.parse();
-			checker.visit(result);
-			assertEquals(new ErrorType("Errore semantico: c non è stato dichiarato!"), checker.getResType());
+			typChecker.visit(result);
+			assertEquals(new ErrorType("Errore semantico: c non è stato dichiarato!"), typChecker.getResType());
 		});
 	}
 
@@ -228,9 +227,9 @@ class TestTypeChecker {
 		assertDoesNotThrow(() -> {
 			Parser parser = new Parser(new Scanner("src/test/data/testTypeChecker/4_tipoNonCompatibile.txt"));
 			NodeProgram result = parser.parse();
-			checker.visit(result);
+			typChecker.visit(result);
 			assertEquals(new ErrorType("Errore semantico: assegnamento a tipo non corrispondente!"),
-					checker.getResType());
+					typChecker.getResType());
 		});
 	}
 
@@ -239,8 +238,8 @@ class TestTypeChecker {
 		assertDoesNotThrow(() -> {
 			Parser parser = new Parser(new Scanner("src/test/data/testTypeChecker/5_corretto.txt"));
 			NodeProgram result = parser.parse();
-			checker.visit(result);
-			assertEquals(VoidType.class, checker.getResType().getClass());
+			typChecker.visit(result);
+			assertEquals(VoidType.class, typChecker.getResType().getClass());
 		});
 	}
 
@@ -249,8 +248,8 @@ class TestTypeChecker {
 		assertDoesNotThrow(() -> {
 			Parser parser = new Parser(new Scanner("src/test/data/testTypeChecker/6_corretto.txt"));
 			NodeProgram result = parser.parse();
-			checker.visit(result);
-			assertEquals(VoidType.class, checker.getResType().getClass());
+			typChecker.visit(result);
+			assertEquals(VoidType.class, typChecker.getResType().getClass());
 		});
 	}
 
@@ -259,8 +258,8 @@ class TestTypeChecker {
 		assertDoesNotThrow(() -> {
 			Parser parser = new Parser(new Scanner("src/test/data/testTypeChecker/7_corretto.txt"));
 			NodeProgram result = parser.parse();
-			checker.visit(result);
-			assertEquals(VoidType.class, checker.getResType().getClass());
+			typChecker.visit(result);
+			assertEquals(VoidType.class, typChecker.getResType().getClass());
 		});
 	}
 }
