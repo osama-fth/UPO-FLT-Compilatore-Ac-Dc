@@ -1,0 +1,10 @@
+bin/
+*.class
+*.log
+RemoteSystemsTempFiles/
+.recommenders/
+tmp/
+*.tmp
+*.bak
+*.launch
+.DS_Store
