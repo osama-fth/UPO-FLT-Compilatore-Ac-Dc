@@ -5,7 +5,7 @@ import visitor.IVisitor;
 public class NodeConst extends NodeExpr {
 	private String value;
 	private LangType type;
-	
+
 	public NodeConst(String valore, LangType tipo) {
 		this.value = valore;
 		this.type = tipo;

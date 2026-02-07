@@ -29,18 +29,14 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza i dati in ingresso per creare un "NodeProgram". Questo metodo avvia
-	 * l'analisi del codice e verifica che non ci siano errori di scrittura.
+	 * Analizza i dati in ingresso per creare un "NodeProgram". 
 	 */
 	public NodeProgram parse() throws SyntacticException {
 		return this.parsePrg();
 	}
 
 	/**
-	 * Confronta il prossimo elemento (token) ricevuto con il tipo di elemento
-	 * atteso. Se i due tipi corrispondono, l'elemento viene accettato e rimosso
-	 * dalla coda. In caso contrario, genera un'eccezione (SyntacticException) per
-	 * segnalare l'errore.
+	 * Confronta il prossimo elemento (token) ricevuto con il tipo di elemento atteso.
 	 */
 	private Token match(TokenType expected) throws SyntacticException {
 		try {
@@ -58,7 +54,8 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo iniziale "Prg" della grammatica. Prg -> DSs $
+	 * Analizza il simbolo iniziale "Prg" della grammatica. 
+	 * Prg -> DSs $
 	 */
 	private NodeProgram parsePrg() throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -74,7 +71,8 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "DSs" della grammatica. DSs -> Dcl DSs | Stm DSs | ϵ
+	 * Analizza il simbolo non-terminale "DSs" della grammatica. 
+	 * DSs -> Dcl DSs | Stm DSs | ϵ
 	 */
 	private ArrayList<NodeDecSt> parseDSs() throws SyntacticException {
 		Token tk;
@@ -109,7 +107,8 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Dcl" della grammatica. Regola: Dcl -> Ty ID DclP
+	 * Analizza il simbolo non-terminale "Dcl" della grammatica. 
+	 * Dcl -> Ty ID DclP
 	 */
 	private NodeDecl parseDcl() throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -125,7 +124,8 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale DclP della grammatica. DclP -> ; | = Exp ;
+	 * Analizza il simbolo non-terminale DclP della grammatica. 
+	 * DclP -> ; | = Exp ;
 	 */
 	private NodeExpr parseDclP() throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -148,7 +148,8 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Stm" (Istruzione) della grammatica. Stm -> id Op Exp ; | print id ;
+	 * Analizza il simbolo non-terminale "Stm" (Istruzione) della grammatica. 
+	 * Stm -> id Op Exp ; | print id ;
 	 */
 	private NodeStm parseStm() throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -207,7 +208,8 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Exp" (Espressione) della grammatica. Exp -> Tr ExpP
+	 * Analizza il simbolo non-terminale "Exp" della grammatica. 
+	 * Exp -> Tr ExpP
 	 */
 	private NodeExpr parseExp() throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -224,7 +226,8 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "ExpP" (il resto dell'espressione) della grammatica. ExpP -> + Tr ExpP | - Tr ExpP | ϵ
+	 * Analizza il simbolo non-terminale "ExpP" della grammatica. 
+	 * ExpP -> + Tr ExpP | - Tr ExpP | ϵ
 	 */
 	private NodeExpr parseExpP(NodeExpr left) throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -253,7 +256,8 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Tr" (Termine) della grammatica. Tr -> Val TrP
+	 * Analizza il simbolo non-terminale "Tr" (Termine) della grammatica. 
+	 * Tr -> Val TrP
 	 */
 	private NodeExpr parseTr() throws SyntacticException {
 		Token tk;
@@ -276,8 +280,8 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "TrP" (il resto del termine) della grammatica. 
-	 * Regola: TrP -> * Val TrP | / Val TrP | ϵ 
+	 * Analizza il simbolo non-terminale "TrP" della grammatica. 
+	 * TrP -> * Val TrP | / Val TrP | ϵ
 	 */
 	private NodeExpr parseTrP(NodeExpr left) throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -307,7 +311,8 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Ty" (Tipo) della grammatica. Regola: Ty -> float | int 
+	 * Analizza il simbolo non-terminale "Ty" della grammatica. 
+	 * Ty -> float | int
 	 */
 	private LangType parseTy() throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -330,7 +335,8 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Val" (Valore) della grammatica. Regola: Val -> INT | FLOAT | ID
+	 * Analizza il simbolo non-terminale "Val" della grammatica.
+	 * Val -> INT | FLOAT | ID
 	 */
 	private NodeExpr parseVal() throws SyntacticException {
 		Token tk;
