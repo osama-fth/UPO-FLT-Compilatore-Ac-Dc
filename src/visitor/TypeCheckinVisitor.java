@@ -29,6 +29,10 @@ public class TypeCheckinVisitor implements IVisitor {
 	public void visit(NodeProgram node) {
 		for (NodeDecSt nodeDecSt : node.getDecSts()) {
 			nodeDecSt.accept(this);
+
+			if (this.resType instanceof ErrorType) { // Se c'è un errore interrompi
+				return;
+			}
 		}
 
 		if (this.resType.getClass() == IntType.class || this.resType.getClass() == FloatType.class) {
@@ -72,17 +76,36 @@ public class TypeCheckinVisitor implements IVisitor {
 
 	@Override
 	public void visit(NodeDecl node) {
-		this.visit(node.getId());
 
-		if (this.resType.getClass() == ErrorType.class) {
-			SymbolTable.Attributes attributes = new SymbolTable.Attributes();
-			attributes.setTipo(node.getType());
-			SymbolTable.enter(node.getId().getName(), attributes);
-			node.getId().setSymbolAttributes(attributes);
-			this.resType = (node.getType() == LangType.INT) ? new IntType() : new FloatType();
-		} else {
+		SymbolTable.Attributes nodoEsistente = SymbolTable.lookUp(node.getId().getName());
+
+		if (nodoEsistente != null) {
 			this.resType = new ErrorType("Errore semantico: " + node.getId().getName() + " già dichiarato!");
+			return;
 		}
+
+		SymbolTable.Attributes nuovaVar = new SymbolTable.Attributes(node.getType());
+		SymbolTable.enter(node.getId().getName(), nuovaVar);
+		node.getId().setSymbolAttributes(nuovaVar);
+
+		// Se c'è un'inizializzazione, verifica la compatibilità dei tipi
+		if (node.getInit() != null) {
+			node.getInit().accept(this);
+			TypeDescriptor initType = this.resType;
+
+			if (initType instanceof ErrorType) {
+				return;
+			}
+
+			TypeDescriptor declType = (node.getType() == LangType.INT) ? new IntType() : new FloatType();
+
+			if (!declType.compatibile(initType)) {
+				this.resType = new ErrorType("Errore semantico: inizializzazione con tipo non compatibile!");
+				return;
+			}
+		}
+
+		this.resType = (node.getType() == LangType.INT) ? new IntType() : new FloatType();
 	}
 
 	@Override
