@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.Test;
 
 import parser.Parser;
@@ -17,7 +15,7 @@ class TestParser {
 	private static final String PATH = "src/test/data/testParser/";
 
 	@Test
-	void testParserCorretto1() throws IOException {
+	void testParserCorretto1() throws Exception {
 		Scanner scanner = new Scanner(PATH + "/testParserCorretto1.txt");
 		Parser parser = new Parser(scanner);
 		assertDoesNotThrow(() -> {
@@ -26,7 +24,7 @@ class TestParser {
 	}
 
 	@Test
-	void testParserCorretto2() throws IOException {
+	void testParserCorretto2() throws Exception {
 		Scanner scanner = new Scanner(PATH + "/testParserCorretto2.txt");
 		Parser parser = new Parser(scanner);
 		assertDoesNotThrow(() -> {
@@ -35,25 +33,27 @@ class TestParser {
 	}
 
 	@Test
-	void testParserEcc_0() throws IOException {
+	void testParserEcc_0() throws Exception {
 		Scanner scanner = new Scanner(PATH + "/testParserEcc_0.txt");
 		Parser parser = new Parser(scanner);
-		assertThrows(SyntacticException.class, () -> {
+		SyntacticException e = assertThrows(SyntacticException.class, () -> {
 			parser.parse();
 		});
+		assertEquals("Token non atteso SEMI a riga 1", e.getMessage());
 	}
 
 	@Test
-	void testParserEcc_1() throws IOException {
+	void testParserEcc_1() throws Exception {
 		Scanner scanner = new Scanner(PATH + "/testParserEcc_1.txt");
 		Parser parser = new Parser(scanner);
-		assertThrows(SyntacticException.class, () -> {
+		SyntacticException e = assertThrows(SyntacticException.class, () -> {
 			parser.parse();
 		});
+		assertEquals("Token non atteso TIMES a riga 2", e.getMessage());
 	}
 
 	@Test
-	void testParserEcc_2() throws IOException {
+	void testParserEcc_2() throws Exception {
 		Scanner scanner = new Scanner(PATH + "/testParserEcc_2.txt");
 		Parser parser = new Parser(scanner);
 		SyntacticException exc = assertThrows(SyntacticException.class, () -> {
@@ -63,52 +63,57 @@ class TestParser {
 	}
 
 	@Test
-	void testParserEcc_3() throws IOException {
+	void testParserEcc_3() throws Exception {
 		Scanner scanner = new Scanner(PATH + "/testParserEcc_3.txt");
 		Parser parser = new Parser(scanner);
-		assertThrows(SyntacticException.class, () -> {
+		SyntacticException e = assertThrows(SyntacticException.class, () -> {
 			parser.parse();
 		});
+		assertEquals("Token non atteso PLUS a riga 2", e.getMessage());
 	}
 
 	@Test
-	void testParserEcc_4() throws IOException {
+	void testParserEcc_4() throws Exception {
 		Scanner scanner = new Scanner(PATH + "/testParserEcc_4.txt");
 		Parser parser = new Parser(scanner);
-		assertThrows(SyntacticException.class, () -> {
+		SyntacticException e = assertThrows(SyntacticException.class, () -> {
 			parser.parse();
 		});
+		assertEquals("Atteso ID, ma trovato INT a riga 2", e.getMessage());
 	}
 
 	@Test
-	void testParserEcc_5() throws IOException {
+	void testParserEcc_5() throws Exception {
 		Scanner scanner = new Scanner(PATH + "/testParserEcc_5.txt");
 		Parser parser = new Parser(scanner);
-		assertThrows(SyntacticException.class, () -> {
+		SyntacticException e = assertThrows(SyntacticException.class, () -> {
 			parser.parse();
 		});
+		assertEquals("Atteso ID, ma trovato INT a riga 3", e.getMessage());
 	}
 
 	@Test
-	void testParserEcc_6() throws IOException {
+	void testParserEcc_6() throws Exception {
 		Scanner scanner = new Scanner(PATH + "/testParserEcc_6.txt");
 		Parser parser = new Parser(scanner);
-		assertThrows(SyntacticException.class, () -> {
+		SyntacticException e = assertThrows(SyntacticException.class, () -> {
 			parser.parse();
 		});
+		assertEquals("Atteso ID, ma trovato TYFLOAT a riga 3", e.getMessage());
 	}
 
 	@Test
-	void testParserEcc_7() throws IOException {
+	void testParserEcc_7() throws Exception {
 		Scanner scanner = new Scanner(PATH + "/testParserEcc_7.txt");
 		Parser parser = new Parser(scanner);
-		assertThrows(SyntacticException.class, () -> {
+		SyntacticException e = assertThrows(SyntacticException.class, () -> {
 			parser.parse();
 		});
+		assertEquals("Atteso ID, ma trovato ASSIGN a riga 2", e.getMessage());
 	}
 
 	@Test
-	void testParserSoloDich() throws IOException {
+	void testParserSoloDich() throws Exception {
 		Scanner scanner = new Scanner(PATH + "/testSoloDich.txt");
 		Parser parser = new Parser(scanner);
 		assertDoesNotThrow(() -> {
@@ -117,7 +122,7 @@ class TestParser {
 	}
 
 	@Test
-	void testParserEcc_9() throws IOException {
+	void testParserEcc_9() throws Exception {
 		Scanner scanner = new Scanner(PATH + "/testSoloDichPrint.txt");
 		Parser parser = new Parser(scanner);
 		assertDoesNotThrow(() -> {

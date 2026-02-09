@@ -1,5 +1,6 @@
 package test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -37,7 +38,7 @@ class TestCodeGenerator {
 		codeGen.visit(program);
 
 		assertTrue(codeGen.getLog().isEmpty());
-		assertFalse(codeGen.getCodiceDc().isEmpty());
+		assertEquals("1 6 / sa la p P", codeGen.getCodiceDc().trim());
 	}
 
 	@Test
@@ -53,7 +54,8 @@ class TestCodeGenerator {
 		codeGen.visit(program);
 
 		assertTrue(codeGen.getLog().isEmpty());
-		assertFalse(codeGen.getCodiceDc().isEmpty());
+		assertEquals("0 sa la 1 + sa 6 sb 1.0 6 5 k / 0 k la lb / + sc la p P lb p P lc p P",
+				codeGen.getCodiceDc().trim());
 	}
 
 	@Test
@@ -69,7 +71,8 @@ class TestCodeGenerator {
 		codeGen.visit(program);
 
 		assertTrue(codeGen.getLog().isEmpty());
-		assertFalse(codeGen.getCodiceDc().isEmpty());
+		assertEquals("5 3 + sa la 0.5 + sb la p P lb 4 5 k / 0 k sb lb p P lb 1 - sc lc lb * sc lc p P",
+				codeGen.getCodiceDc().trim());
 	}
 
 	@Test
@@ -86,5 +89,6 @@ class TestCodeGenerator {
 
 		assertFalse(codeGen.getLog().isEmpty());
 		assertTrue(codeGen.getLog().contains("registri esauriti"));
+		assertEquals("Errore: registri esauriti per la variabile uno", codeGen.getLog().trim());
 	}
 }
