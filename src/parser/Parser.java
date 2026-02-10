@@ -38,15 +38,15 @@ public class Parser {
 	/**
 	 * Confronta il prossimo token ricevuto con il tipo di token atteso.
 	 */
-	private Token match(TokenType expected) throws SyntacticException {
+	private Token match(TokenType type) throws SyntacticException {
 		try {
 			Token token = this.scanner.peekToken();
 
-			if (expected.equals(token.getTipo())) {
+			if (type.equals(token.getTipo())) {
 				return this.scanner.nextToken();
 			} else {
 				throw new SyntacticException(
-						"Atteso " + expected + ", ma trovato " + token.getTipo() + " a riga " + token.getRiga());
+						"Atteso " + type + ", ma trovato " + token.getTipo() + " a riga " + token.getRiga());
 			}
 		} catch (LexicalException e) {
 			throw new SyntacticException(e.getMessage());
@@ -70,19 +70,12 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "DSs" della grammatica. DSs -> Dcl DSs |
-	 * Stm DSs | ϵ
+	 * Analizza il simbolo non-terminale "DSs" della grammatica. DSs -> Dcl DSs | Stm DSs | ϵ
 	 */
 	private ArrayList<NodeDecSt> parseDSs() throws SyntacticException {
-		Token tk;
+		Token tk = getNextToken(scanner);
 		ArrayList<NodeDecSt> nodeDecSts = new ArrayList<>();
 		NodeDecSt node;
-
-		try {
-			tk = scanner.peekToken();
-		} catch (LexicalException e) {
-			throw new SyntacticException(e.getMessage());
-		}
 
 		switch (tk.getTipo()) {
 			case TYFLOAT, TYINT -> { // DSs -> Dcl DSs
@@ -145,8 +138,7 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Stm" della grammatica. Stm -> id Op Exp ;
-	 * | print id ;
+	 * Analizza il simbolo non-terminale "Stm" della grammatica. Stm -> id Op Exp ; | print id ;
 	 */
 	private NodeStm parseStm() throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -222,8 +214,7 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "ExpP" della grammatica. ExpP -> + Tr ExpP
-	 * | - Tr ExpP | ϵ
+	 * Analizza il simbolo non-terminale "ExpP" della grammatica. ExpP -> + Tr ExpP | - Tr ExpP | ϵ
 	 */
 	private NodeExpr parseExpP(NodeExpr left) throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -255,13 +246,7 @@ public class Parser {
 	 * Analizza il simbolo non-terminale "Tr" della grammatica. Tr -> Val TrP
 	 */
 	private NodeExpr parseTr() throws SyntacticException {
-		Token tk;
-
-		try {
-			tk = scanner.peekToken();
-		} catch (LexicalException e) {
-			throw new SyntacticException(e.getMessage());
-		}
+		Token tk = getNextToken(scanner);
 
 		TokenType type = tk.getTipo();
 
@@ -275,8 +260,7 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "TrP" della grammatica. TrP -> * Val TrP |
-	 * / Val TrP | ϵ
+	 * Analizza il simbolo non-terminale "TrP" della grammatica. TrP -> * Val TrP | / Val TrP | ϵ
 	 */
 	private NodeExpr parseTrP(NodeExpr left) throws SyntacticException {
 		Token tk = getNextToken(scanner);
@@ -329,16 +313,10 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Val" della grammatica. Val -> INT | FLOAT
-	 * | ID
+	 * Analizza il simbolo non-terminale "Val" della grammatica. Val -> INT | FLOAT | ID
 	 */
 	private NodeExpr parseVal() throws SyntacticException {
-		Token tk;
-		try {
-			tk = scanner.peekToken();
-		} catch (LexicalException e) {
-			throw new SyntacticException(e.getMessage());
-		}
+		Token tk = getNextToken(scanner);
 
 		TokenType type = tk.getTipo();
 
@@ -363,12 +341,7 @@ public class Parser {
 	 * Analizza il simbolo non-terminale Op della grammatica. Op -> = | opAss
 	 */
 	private Token parseOp() throws SyntacticException {
-		Token tk;
-		try {
-			tk = scanner.peekToken();
-		} catch (LexicalException e) {
-			throw new SyntacticException(e.getMessage());
-		}
+		Token tk = getNextToken(scanner);
 
 		TokenType type = tk.getTipo();
 

@@ -2,10 +2,12 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
+import ast.NodeProgram;
 import parser.Parser;
 import parser.SyntacticException;
 import scanner.Scanner;
@@ -128,5 +130,27 @@ class TestParser {
 		assertDoesNotThrow(() -> {
 			parser.parse();
 		});
+	}
+
+	@Test
+	void testASTSoloDichiarazioni() throws Exception {
+		Scanner scanner = new Scanner(PATH + "testSoloDich.txt");
+		Parser parser = new Parser(scanner);
+		NodeProgram ast = parser.parse();
+
+		assertNotNull(ast);
+		String expected = "NodeProgram [decSts=[NodeDecl [id=NodeId [name=x], type=INT, init=null], NodeDecl [id=NodeId [name=floati], type=FLOAT, init=null]]]";
+		assertEquals(expected, ast.toString());
+	}
+
+	@Test
+	void testASTDichiarazioniEPrint() throws Exception {
+		Scanner scanner = new Scanner(PATH + "testSoloDichPrint.txt");
+		Parser parser = new Parser(scanner);
+		NodeProgram ast = parser.parse();
+
+		assertNotNull(ast);
+		String expected = "NodeProgram [decSts=[NodeDecl [id=NodeId [name=temp], type=INT, init=null], NodePrint [id=NodeId [name=abc]]]]";
+		assertEquals(expected, ast.toString());
 	}
 }

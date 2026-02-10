@@ -15,20 +15,9 @@ public class SymbolTable {
 		private LangType tipo;
 		private char registro;
 
-		public Attributes() {
-		}
-
-		public Attributes(LangType tipo, char register) {
-			this.tipo = tipo;
-			this.registro = register;
-		}
-
+		
 		public Attributes(LangType tipo) {
 			this.tipo = tipo;
-		}
-
-		public Attributes(char register) {
-			this.registro = register;
 		}
 
 		public LangType getTipo() {
@@ -59,19 +48,6 @@ public class SymbolTable {
 
 	public static Attributes lookUp(String id) {
 		return table.get(id);
-	}
-
-	public static String toStr() {
-		StringBuilder sb = new StringBuilder();
-		for (String key : table.keySet()) {
-			sb.append(key).append(" = [").append(table.get(key).tipo).append("][").append(table.get(key).registro)
-					.append("]\n");
-		}
-		return sb.toString();
-	}
-
-	public static int size() {
-		return table.size();
 	}
 
 	public static void clearTable() {
