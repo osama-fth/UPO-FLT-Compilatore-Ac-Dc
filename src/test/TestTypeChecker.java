@@ -10,17 +10,17 @@ import parser.Parser;
 import scanner.Scanner;
 import symbolTable.SymbolTable;
 import visitor.ErrorType;
-import visitor.TypeCheckinVisitor;
+import visitor.TypeCheckingVisitor;
 import visitor.VoidType;
 
 class TestTypeChecker {
 
 	private static final String PATH = "src/test/data/testTypeChecker/";
-	private TypeCheckinVisitor typChecker;
+	private TypeCheckingVisitor typChecker;
 
 	@BeforeEach
 	void setUp() {
-		typChecker = new TypeCheckinVisitor();
+		typChecker = new TypeCheckingVisitor();
 		SymbolTable.clearTable();
 	}
 

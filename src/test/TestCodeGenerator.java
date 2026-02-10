@@ -13,7 +13,7 @@ import scanner.Scanner;
 import symbolTable.SymbolTable;
 import visitor.CodeGeneratorVisitor;
 import visitor.Registri;
-import visitor.TypeCheckinVisitor;
+import visitor.TypeCheckingVisitor;
 
 class TestCodeGenerator {
 
@@ -31,7 +31,7 @@ class TestCodeGenerator {
 		Parser parser = new Parser(scanner);
 		NodeProgram program = parser.parse();
 
-		TypeCheckinVisitor typeChecker = new TypeCheckinVisitor();
+		TypeCheckingVisitor typeChecker = new TypeCheckingVisitor();
 		typeChecker.visit(program);
 
 		CodeGeneratorVisitor codeGen = new CodeGeneratorVisitor();
@@ -47,7 +47,7 @@ class TestCodeGenerator {
 		Parser parser = new Parser(scanner);
 		NodeProgram program = parser.parse();
 
-		TypeCheckinVisitor typeChecker = new TypeCheckinVisitor();
+		TypeCheckingVisitor typeChecker = new TypeCheckingVisitor();
 		typeChecker.visit(program);
 
 		CodeGeneratorVisitor codeGen = new CodeGeneratorVisitor();
@@ -64,7 +64,7 @@ class TestCodeGenerator {
 		Parser parser = new Parser(scanner);
 		NodeProgram program = parser.parse();
 
-		TypeCheckinVisitor typeChecker = new TypeCheckinVisitor();
+		TypeCheckingVisitor typeChecker = new TypeCheckingVisitor();
 		typeChecker.visit(program);
 
 		CodeGeneratorVisitor codeGen = new CodeGeneratorVisitor();
@@ -81,7 +81,7 @@ class TestCodeGenerator {
 		Parser parser = new Parser(scanner);
 		NodeProgram program = parser.parse();
 
-		TypeCheckinVisitor typeChecker = new TypeCheckinVisitor();
+		TypeCheckingVisitor typeChecker = new TypeCheckingVisitor();
 		typeChecker.visit(program);
 
 		CodeGeneratorVisitor codeGen = new CodeGeneratorVisitor();

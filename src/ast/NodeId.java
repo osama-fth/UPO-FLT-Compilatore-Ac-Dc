@@ -1,20 +1,13 @@
 package ast;
 
 import symbolTable.SymbolTable;
+import symbolTable.SymbolTable.Attributes;
 import visitor.IVisitor;
 
 public class NodeId extends NodeAST {
 
 	private String name;
-	private SymbolTable.Attributes symbolAttributes;
-
-	public SymbolTable.Attributes getSymbolAttributes() {
-		return symbolAttributes;
-	}
-
-	public void setSymbolAttributes(SymbolTable.Attributes symbolAttributes) {
-		this.symbolAttributes = symbolAttributes;
-	}
+	private Attributes symbolAttributes;
 
 	public String getName() {
 		return name;
@@ -33,5 +26,13 @@ public class NodeId extends NodeAST {
 	@Override
 	public void accept(IVisitor visitor) {
 		visitor.visit(this);
+	}
+	
+	public SymbolTable.Attributes getSymbolAttributes() {
+		return symbolAttributes;
+	}
+
+	public void setSymbolAttributes(Attributes symbolAttributes) {
+		this.symbolAttributes = symbolAttributes;
 	}
 }

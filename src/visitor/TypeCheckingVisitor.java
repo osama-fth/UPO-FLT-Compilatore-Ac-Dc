@@ -13,11 +13,11 @@ import ast.NodePrint;
 import ast.NodeProgram;
 import symbolTable.SymbolTable;
 
-public class TypeCheckinVisitor implements IVisitor {
+public class TypeCheckingVisitor implements IVisitor {
 
 	private TypeDescriptor resType;
 
-	public TypeCheckinVisitor() {
+	public TypeCheckingVisitor() {
 		this.resType = null;
 	}
 
