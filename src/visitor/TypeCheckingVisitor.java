@@ -35,7 +35,7 @@ public class TypeCheckingVisitor implements IVisitor {
 		for (NodeDecSt nodeDecSt : node.getDecSts()) {
 			nodeDecSt.accept(this);
 
-			if (this.resType instanceof ErrorType) { // Se c'è un errore interrompi
+			if (this.resType instanceof ErrorType) {
 				return;
 			}
 		}
@@ -151,6 +151,5 @@ public class TypeCheckingVisitor implements IVisitor {
 	@Override
 	public void visit(NodeDeref node) {
 		this.visit(node.getId());
-
 	}
 }
