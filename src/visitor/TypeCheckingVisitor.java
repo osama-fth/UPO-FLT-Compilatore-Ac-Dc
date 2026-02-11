@@ -12,6 +12,11 @@ import ast.NodeId;
 import ast.NodePrint;
 import ast.NodeProgram;
 import symbolTable.SymbolTable;
+import visitor.type.ErrorType;
+import visitor.type.FloatType;
+import visitor.type.IntType;
+import visitor.type.OkType;
+import visitor.type.TypeDescriptor;
 
 public class TypeCheckingVisitor implements IVisitor {
 
@@ -36,7 +41,7 @@ public class TypeCheckingVisitor implements IVisitor {
 		}
 
 		if (this.resType.getClass() == IntType.class || this.resType.getClass() == FloatType.class) {
-			this.resType = new VoidType();
+			this.resType = new OkType();
 		}
 	}
 
@@ -140,7 +145,7 @@ public class TypeCheckingVisitor implements IVisitor {
 	@Override
 	public void visit(NodePrint node) {
 		this.visit(node.getId());
-		this.resType = (this.resType instanceof ErrorType) ? this.resType : new VoidType();
+		this.resType = (this.resType instanceof ErrorType) ? this.resType : new OkType();
 	}
 
 	@Override

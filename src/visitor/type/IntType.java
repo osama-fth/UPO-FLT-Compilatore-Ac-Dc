@@ -1,4 +1,4 @@
-package visitor;
+package visitor.type;
 
 public class IntType extends TypeDescriptor {
 

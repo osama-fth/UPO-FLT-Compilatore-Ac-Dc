@@ -9,9 +9,9 @@ import ast.NodeProgram;
 import parser.Parser;
 import scanner.Scanner;
 import symbolTable.SymbolTable;
-import visitor.ErrorType;
 import visitor.TypeCheckingVisitor;
-import visitor.VoidType;
+import visitor.type.ErrorType;
+import visitor.type.OkType;
 
 class TestTypeChecker {
 
@@ -69,7 +69,7 @@ class TestTypeChecker {
 		NodeProgram result = parser.parse();
 		typChecker.visit(result);
 
-		assertEquals(VoidType.class, typChecker.getResType().getClass());
+		assertEquals(OkType.class, typChecker.getResType().getClass());
 
 	}
 
@@ -79,7 +79,7 @@ class TestTypeChecker {
 		NodeProgram result = parser.parse();
 		typChecker.visit(result);
 
-		assertEquals(VoidType.class, typChecker.getResType().getClass());
+		assertEquals(OkType.class, typChecker.getResType().getClass());
 
 	}
 
@@ -89,6 +89,6 @@ class TestTypeChecker {
 		NodeProgram result = parser.parse();
 		typChecker.visit(result);
 
-		assertEquals(VoidType.class, typChecker.getResType().getClass());
+		assertEquals(OkType.class, typChecker.getResType().getClass());
 	}
 }

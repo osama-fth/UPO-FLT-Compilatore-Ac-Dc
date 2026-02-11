@@ -12,8 +12,8 @@ import parser.Parser;
 import scanner.Scanner;
 import symbolTable.SymbolTable;
 import visitor.CodeGeneratorVisitor;
-import visitor.Registri;
 import visitor.TypeCheckingVisitor;
+import visitor.codegen.Registri;
 
 class TestCodeGenerator {
 

@@ -1,8 +1,8 @@
-package visitor;
+package visitor.type;
 
-public class VoidType extends TypeDescriptor {
+public class OkType extends TypeDescriptor {
 
-	public VoidType() {
+	public OkType() {
 	}
 
 	@Override
@@ -12,7 +12,7 @@ public class VoidType extends TypeDescriptor {
 
 	@Override
 	public TypeDescriptor getType() {
-		return new VoidType();
+		return new OkType();
 	}
 
 }

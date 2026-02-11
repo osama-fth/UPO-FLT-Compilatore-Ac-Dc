@@ -1,4 +1,4 @@
-package visitor;
+package visitor.type;
 
 public class ErrorType extends TypeDescriptor {
 	private String msg;

@@ -10,6 +10,7 @@ import ast.NodeId;
 import ast.NodePrint;
 import ast.NodeProgram;
 import symbolTable.SymbolTable;
+import visitor.codegen.Registri;
 
 public class CodeGeneratorVisitor implements IVisitor {
 
