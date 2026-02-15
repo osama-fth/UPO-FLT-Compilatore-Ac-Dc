@@ -1,7 +1,7 @@
 package ast;
 
 public enum LangOperation {
-	PLUS("+"), MINUS("-"), TIMES("*"), DIVIDE("/"), DIV_FLOAT("5k / 0k"), OP_ASSIGN("=");
+	PLUS("+"), MINUS("-"), TIMES("*"), DIVIDE("/"), OP_ASSIGN("="), DIV_FLOAT("5k / 0k");
 
 	private String operator;
 

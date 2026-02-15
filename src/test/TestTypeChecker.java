@@ -17,6 +17,8 @@ class TestTypeChecker {
 
 	private static final String PATH = "src/test/data/testTypeChecker/";
 	private TypeCheckingVisitor typChecker;
+	private Scanner scanner;
+	private Parser parser;
 
 	@BeforeEach
 	void setUp() {
@@ -24,9 +26,14 @@ class TestTypeChecker {
 		SymbolTable.clearTable();
 	}
 
+	private void inizializzaParser(String fileName) throws Exception {
+		scanner = new Scanner(PATH + fileName);
+		parser = new Parser(scanner);
+	}
+
 	@Test
 	void testDicRipetute() throws Exception {
-		Parser parser = new Parser(new Scanner(PATH + "1_dicRipetute.txt"));
+		inizializzaParser("1_dicRipetute.txt");
 		NodeProgram result = parser.parse();
 		typChecker.visit(result);
 
@@ -35,7 +42,7 @@ class TestTypeChecker {
 
 	@Test
 	void testIdNonDec() throws Exception {
-		Parser parser = new Parser(new Scanner(PATH + "2_idNonDec.txt"));
+		inizializzaParser("2_idNonDec.txt");
 		NodeProgram result = parser.parse();
 		typChecker.visit(result);
 
@@ -44,48 +51,44 @@ class TestTypeChecker {
 
 	@Test
 	void testIdNonDec2() throws Exception {
-		Parser parser = new Parser(new Scanner(PATH + "3_idNonDec.txt"));
+		inizializzaParser("3_idNonDec.txt");
 		NodeProgram result = parser.parse();
 		typChecker.visit(result);
 
 		assertEquals(new ErrorType("Errore semantico: c non è stato dichiarato!"), typChecker.getResType());
-
 	}
 
 	@Test
 	void testTipoNonCompatibile() throws Exception {
-		Parser parser = new Parser(new Scanner(PATH + "4_tipoNonCompatibile.txt"));
+		inizializzaParser("4_tipoNonCompatibile.txt");
 		NodeProgram result = parser.parse();
 		typChecker.visit(result);
 
 		assertEquals(new ErrorType("Errore semantico: assegnamento a tipo non corrispondente!"),
 				typChecker.getResType());
-
 	}
 
 	@Test
 	void testCorretto() throws Exception {
-		Parser parser = new Parser(new Scanner(PATH + "5_corretto.txt"));
+		inizializzaParser("5_corretto.txt");
 		NodeProgram result = parser.parse();
 		typChecker.visit(result);
 
 		assertEquals(OkType.class, typChecker.getResType().getClass());
-
 	}
 
 	@Test
 	void testCorretto2() throws Exception {
-		Parser parser = new Parser(new Scanner(PATH + "6_corretto.txt"));
+		inizializzaParser("6_corretto.txt");
 		NodeProgram result = parser.parse();
 		typChecker.visit(result);
 
 		assertEquals(OkType.class, typChecker.getResType().getClass());
-
 	}
 
 	@Test
 	void testCorretto3() throws Exception {
-		Parser parser = new Parser(new Scanner(PATH + "7_corretto.txt"));
+		inizializzaParser("7_corretto.txt");
 		NodeProgram result = parser.parse();
 		typChecker.visit(result);
 

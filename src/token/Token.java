@@ -4,12 +4,12 @@ public class Token {
 
 	private int riga;
 	private TokenType tipo;
-	private String valore;
+	private String val;
 
 	public Token(int riga, TokenType tipo, String valore) {
 		this.riga = riga;
 		this.tipo = tipo;
-		this.valore = valore;
+		this.val = valore;
 	}
 
 	public Token(int riga, TokenType tipo) {
@@ -25,15 +25,15 @@ public class Token {
 		return tipo;
 	}
 
-	public String getValore() {
-		return valore;
+	public String getVal() {
+		return val;
 	}
 
 	@Override
 	public String toString() {
 		if (getTipo() == TokenType.INT || getTipo() == TokenType.FLOAT || getTipo() == TokenType.ID
 				|| getTipo() == TokenType.OP_ASSIGN) {
-			return "<" + getTipo().toString() + ", r:" + getRiga() + ", val:" + getValore() + ">";
+			return "<" + getTipo().toString() + ", r:" + getRiga() + ", val:" + getVal() + ">";
 		}
 
 		return "<" + getTipo().toString() + ", r:" + getRiga() + ">";

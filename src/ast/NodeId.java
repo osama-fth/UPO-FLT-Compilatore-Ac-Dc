@@ -1,13 +1,12 @@
 package ast;
 
-import symbolTable.SymbolTable;
-import symbolTable.SymbolTable.Attributes;
+import symbolTable.Attributes;
 import visitor.IVisitor;
 
 public class NodeId extends NodeAST {
 
 	private String name;
-	private Attributes symbolAttributes;
+	private Attributes attributes;
 
 	public String getName() {
 		return name;
@@ -28,11 +27,11 @@ public class NodeId extends NodeAST {
 		visitor.visit(this);
 	}
 	
-	public SymbolTable.Attributes getSymbolAttributes() {
-		return symbolAttributes;
+	public Attributes getAttributes() {
+		return attributes;
 	}
 
-	public void setSymbolAttributes(Attributes symbolAttributes) {
-		this.symbolAttributes = symbolAttributes;
+	public void setAttributes(Attributes Attributes) {
+		this.attributes = Attributes;
 	}
 }

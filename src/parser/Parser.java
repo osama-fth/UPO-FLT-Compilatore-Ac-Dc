@@ -28,22 +28,16 @@ public class Parser {
 		this.scanner = scanner;
 	}
 
-	/**
-	 * Analizza i dati in ingresso per creare un "NodeProgram".
-	 */
 	public NodeProgram parse() throws SyntacticException {
-		return this.parsePrg();
+		return parsePrg();
 	}
 
-	/**
-	 * Confronta il prossimo token ricevuto con il tipo di token atteso.
-	 */
 	private Token match(TokenType type) throws SyntacticException {
 		try {
-			Token token = this.scanner.peekToken();
+			Token token = scanner.peekToken();
 
 			if (type.equals(token.getTipo())) {
-				return this.scanner.nextToken();
+				return scanner.nextToken();
 			} else {
 				throw new SyntacticException(
 						"Atteso " + type + ", ma trovato " + token.getTipo() + " a riga " + token.getRiga());
@@ -54,311 +48,264 @@ public class Parser {
 	}
 
 	/**
-	 * Analizza il simbolo iniziale "Prg" della grammatica. Prg -> DSs $
+	 * Restituisce il prossimo token senza consumarlo.
 	 */
-	private NodeProgram parsePrg() throws SyntacticException {
-		Token tk = getNextToken(scanner);
-		ArrayList<NodeDecSt> node = parseDSs();
-
-		switch (tk.getTipo()) {
-			case TYFLOAT, TYINT, ID, PRINT, EOF -> { // Prg -> DSs $
-				match(TokenType.EOF);
-				return new NodeProgram(node);
-			}
-			default -> throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga());
+	private Token getNextToken() throws SyntacticException {
+		try {
+			return scanner.peekToken();
+		} catch (LexicalException e) {
+			throw new SyntacticException(e.getMessage());
 		}
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "DSs" della grammatica. DSs -> Dcl DSs | Stm DSs | ϵ
+	 * Prg -> DSs $
+	 */
+	private NodeProgram parsePrg() throws SyntacticException {
+		Token tk = getNextToken();
+
+		switch (tk.getTipo()) {
+			case TYFLOAT, TYINT, ID, PRINT, EOF -> {
+				ArrayList<NodeDecSt> decSts = parseDSs();
+				match(TokenType.EOF);
+				return new NodeProgram(decSts);
+			}
+			default -> throw new SyntacticException(
+					"Token " + tk.getTipo() + " a riga " + tk.getRiga() + " non è inizio di programma valido");
+		}
+	}
+
+	/**
+	 * DSs -> Dcl DSs | Stm DSs | ϵ
 	 */
 	private ArrayList<NodeDecSt> parseDSs() throws SyntacticException {
-		Token tk = getNextToken(scanner);
+		Token tk = getNextToken();
 		ArrayList<NodeDecSt> nodeDecSts = new ArrayList<>();
-		NodeDecSt node;
 
 		switch (tk.getTipo()) {
 			case TYFLOAT, TYINT -> { // DSs -> Dcl DSs
-				node = parseDcl();
+				nodeDecSts.add(parseDcl());
+				nodeDecSts.addAll(parseDSs());
 			}
 
 			case ID, PRINT -> { // DSs -> Stm DSs
-				node = parseStm();
+				nodeDecSts.add(parseStm());
+				nodeDecSts.addAll(parseDSs());
 			}
 
 			case EOF -> { // DSs -> ϵ
-				return nodeDecSts;
 			}
 
 			default -> throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga());
 		}
 
-		nodeDecSts.add(node);
-		nodeDecSts.addAll(parseDSs());
 		return nodeDecSts;
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Dcl" della grammatica. Dcl -> Ty ID DclP
+	 * Dcl -> Ty ID DclP
 	 */
 	private NodeDecl parseDcl() throws SyntacticException {
-		Token tk = getNextToken(scanner);
-
-		if (tk.getTipo() == TokenType.TYFLOAT || tk.getTipo() == TokenType.TYINT) { // Dcl -> Ty ID DclP
-			LangType type = parseTy();
-			NodeId nodeId = new NodeId(match(TokenType.ID).getValore());
-			NodeExpr init = parseDclP();
-			return new NodeDecl(nodeId, type, init);
-		} else {
-			throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga());
-		}
+		LangType type = parseTy();
+		NodeId nodeId = new NodeId(match(TokenType.ID).getVal());
+		NodeExpr init = parseDclP();
+		return new NodeDecl(nodeId, type, init);
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale DclP della grammatica. DclP -> ; | = Exp ;
+	 * DclP -> ; | = Exp ;
 	 */
 	private NodeExpr parseDclP() throws SyntacticException {
-		Token tk = getNextToken(scanner);
+		Token tk = getNextToken();
 
-		switch (tk.getTipo()) { // DclP -> ;
+		switch (tk.getTipo()) {
 			case SEMI -> {
 				match(TokenType.SEMI);
 				return null;
 			}
 
-			case ASSIGN -> { // DclP -> = Exp ;
+			case ASSIGN -> {
 				match(TokenType.ASSIGN);
 				NodeExpr init = parseExp();
 				match(TokenType.SEMI);
 				return init;
 			}
 
-			default -> throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga());
+			default -> throw new SyntacticException(
+					"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso ';' o '='");
 		}
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Stm" della grammatica. Stm -> id Op Exp ; | print id ;
+	 * Stm -> id Op Exp ; | print id ;
 	 */
 	private NodeStm parseStm() throws SyntacticException {
-		Token tk = getNextToken(scanner);
+		Token tk = getNextToken();
 
 		switch (tk.getTipo()) {
-			case ID -> { // Stm -> id Op Exp ;
-				NodeId nodeId = new NodeId(match(TokenType.ID).getValore());
+			case ID -> {
+				NodeId nodeId = new NodeId(match(TokenType.ID).getVal());
 				Token tkOp = parseOp();
 				NodeExpr nodeExpr = parseExp();
 				match(TokenType.SEMI);
 
 				if (tkOp.getTipo() == TokenType.ASSIGN) {
 					return new NodeAssign(nodeId, nodeExpr);
-				} else if (tkOp.getTipo() == TokenType.OP_ASSIGN) {
-					String opSymbol = tkOp.getValore();
-					LangOperation langOper;
-
-					switch (opSymbol) {
-						case "+=" -> {
-							langOper = LangOperation.PLUS;
-						}
-
-						case "-=" -> {
-							langOper = LangOperation.MINUS;
-						}
-
-						case "*=" -> {
-							langOper = LangOperation.TIMES;
-						}
-
-						case "/=" -> {
-							langOper = LangOperation.DIVIDE;
-						}
-
+				} else {
+					LangOperation langOper = switch (tkOp.getVal()) {
+						case "+=" -> LangOperation.PLUS;
+						case "-=" -> LangOperation.MINUS;
+						case "*=" -> LangOperation.TIMES;
+						case "/=" -> LangOperation.DIVIDE;
 						default -> throw new SyntacticException(
-								"Operatore assegnamento non valido: " + opSymbol + " a riga " + tkOp.getRiga());
-					}
+								"Operatore assegnamento non valido: " + tkOp.getVal() + " a riga " + tkOp.getRiga());
+					};
 
 					NodeExpr newRight = new NodeBinOp(langOper, new NodeDeref(nodeId), nodeExpr);
 					return new NodeAssign(nodeId, newRight);
-
-				} else {
-					throw new SyntacticException("Token non atteso " + tkOp.getTipo() + " a riga " + tkOp.getRiga());
 				}
 			}
 
-			case PRINT -> { // Stm print id ;
+			case PRINT -> {
 				match(TokenType.PRINT);
-				NodeId nodeId = new NodeId(match(TokenType.ID).getValore());
+				NodeId nodeId = new NodeId(match(TokenType.ID).getVal());
 				match(TokenType.SEMI);
 				return new NodePrint(nodeId);
 			}
 
-			default -> throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga());
+			default -> throw new SyntacticException(
+					"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso ID o 'print'");
 		}
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Exp" della grammatica. Exp -> Tr ExpP
+	 * Exp -> Tr ExpP
 	 */
 	private NodeExpr parseExp() throws SyntacticException {
-		Token tk = getNextToken(scanner);
-
-		TokenType type = tk.getTipo();
-
-		if (type == TokenType.ID || type == TokenType.FLOAT || type == TokenType.INT) {
-			NodeExpr term = parseTr();
-			return parseExpP(term);
-
-		} else {
-			throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga());
-		}
+		NodeExpr term = parseTr();
+		return parseExpP(term);
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "ExpP" della grammatica. ExpP -> + Tr ExpP | - Tr ExpP | ϵ
+	 * ExpP -> + Tr ExpP | - Tr ExpP | ϵ
 	 */
 	private NodeExpr parseExpP(NodeExpr left) throws SyntacticException {
-		Token tk = getNextToken(scanner);
-		LangOperation op;
+		Token tk = getNextToken();
 
 		switch (tk.getTipo()) {
-
-			case PLUS -> { // ExpP -> + Tr ExpP
+			case PLUS -> {
 				match(TokenType.PLUS);
-				op = LangOperation.PLUS;
+				return parseExpP(new NodeBinOp(LangOperation.PLUS, left, parseTr()));
 			}
 
-			case MINUS -> { // ExpP -> - Tr ExpP
+			case MINUS -> {
 				match(TokenType.MINUS);
-				op = LangOperation.MINUS;
+				return parseExpP(new NodeBinOp(LangOperation.MINUS, left, parseTr()));
 			}
 
-			case SEMI -> { // ExpP -> ;
+			case SEMI -> {
 				return left;
 			}
 
-			default -> throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga());
+			default -> throw new SyntacticException(
+					"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso '+', '-' o ';'");
 		}
-
-		return parseExpP(new NodeBinOp(op, left, parseTr()));
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Tr" della grammatica. Tr -> Val TrP
+	 * Tr -> Val TrP
 	 */
 	private NodeExpr parseTr() throws SyntacticException {
-		Token tk = getNextToken(scanner);
-
-		TokenType type = tk.getTipo();
-
-		if (type == TokenType.ID || type == TokenType.FLOAT || type == TokenType.INT) { // Tr -> Val TrP
-			NodeExpr nodeExpr = parseVal();
-			return parseTrP(nodeExpr);
-
-		} else {
-			throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga());
-		}
+		NodeExpr nodeExpr = parseVal();
+		return parseTrP(nodeExpr);
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "TrP" della grammatica. TrP -> * Val TrP | / Val TrP | ϵ
+	 * TrP -> * Val TrP | / Val TrP | ϵ
 	 */
 	private NodeExpr parseTrP(NodeExpr left) throws SyntacticException {
-		Token tk = getNextToken(scanner);
-		LangOperation op;
+		Token tk = getNextToken();
 
 		switch (tk.getTipo()) {
-
-			case TIMES -> { // TrP -> * Val TrP
+			case TIMES -> {
 				match(TokenType.TIMES);
-				op = LangOperation.TIMES;
+				return parseTrP(new NodeBinOp(LangOperation.TIMES, left, parseVal()));
 			}
 
-			case DIVIDE -> { // TrP -> / Val TrP
+			case DIVIDE -> {
 				match(TokenType.DIVIDE);
-				op = LangOperation.DIVIDE;
+				return parseTrP(new NodeBinOp(LangOperation.DIVIDE, left, parseVal()));
 			}
 
-			case PLUS, MINUS, SEMI -> { // TrP -> ϵ
+			case PLUS, MINUS, SEMI -> {
 				return left;
 			}
 
-			default -> throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga());
+			default -> throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga()
+					+ ", atteso '*', '/', '+', '-' o ';'");
 		}
-
-		return parseTrP(new NodeBinOp(op, left, parseVal()));
-
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Ty" della grammatica. Ty -> float | int
+	 * Ty -> float | int
 	 */
 	private LangType parseTy() throws SyntacticException {
-		Token tk = getNextToken(scanner);
+		Token tk = getNextToken();
 
 		switch (tk.getTipo()) {
-
-			case TYFLOAT -> { // Ty -> float
+			case TYFLOAT -> {
 				match(TokenType.TYFLOAT);
 				return LangType.FLOAT;
 			}
 
-			case TYINT -> { // Ty -> int
+			case TYINT -> {
 				match(TokenType.TYINT);
 				return LangType.INT;
-
 			}
 
-			default -> throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga());
+			default -> throw new SyntacticException(
+					"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso 'float' o 'int'");
 		}
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale "Val" della grammatica. Val -> INT | FLOAT | ID
+	 * Val -> INT | FLOAT | ID
 	 */
 	private NodeExpr parseVal() throws SyntacticException {
-		Token tk = getNextToken(scanner);
+		Token tk = getNextToken();
 
-		TokenType type = tk.getTipo();
+		switch (tk.getTipo()) {
+			case INT -> {
+				Token matched = match(TokenType.INT);
+				return new NodeConst(matched.getVal(), LangType.INT);
+			}
 
-		switch (type) {
-
-			case INT, FLOAT -> {
-				Token matched = match(type);
-				LangType langType = (type == TokenType.INT) ? LangType.INT : LangType.FLOAT;
-				return new NodeConst(matched.getValore(), langType);
+			case FLOAT -> {
+				Token matched = match(TokenType.FLOAT);
+				return new NodeConst(matched.getVal(), LangType.FLOAT);
 			}
 
 			case ID -> {
 				Token matched = match(TokenType.ID);
-				return new NodeDeref(new NodeId(matched.getValore()));
+				return new NodeDeref(new NodeId(matched.getVal()));
 			}
 
-			default -> throw new SyntacticException("Token non atteso " + type + " a riga " + tk.getRiga());
+			default -> throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga()
+					+ ", atteso valore (INT, FLOAT o ID)");
 		}
 	}
 
 	/**
-	 * Analizza il simbolo non-terminale Op della grammatica. Op -> = | opAss
+	 * Op -> = | opAss
 	 */
 	private Token parseOp() throws SyntacticException {
-		Token tk = getNextToken(scanner);
+		Token tk = getNextToken();
 
-		TokenType type = tk.getTipo();
-
-		if (type == TokenType.ASSIGN || type == TokenType.OP_ASSIGN) {
-			return match(type);
-
+		if (tk.getTipo() == TokenType.ASSIGN || tk.getTipo() == TokenType.OP_ASSIGN) {
+			return match(tk.getTipo());
 		} else {
-			throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga());
-		}
-	}
-
-	private Token getNextToken(Scanner scanner) throws SyntacticException {
-		try {
-			return scanner.peekToken();
-
-		} catch (LexicalException e) {
-			throw new SyntacticException(e.getMessage());
+			throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga()
+					+ ", atteso '=' o operatore di assegnamento");
 		}
 	}
 }

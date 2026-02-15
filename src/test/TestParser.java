@@ -15,142 +15,121 @@ import scanner.Scanner;
 class TestParser {
 
 	private static final String PATH = "src/test/data/testParser/";
+	private Scanner scanner;
+	private Parser parser;
+
+	private void inizializzaParser(String fileName) throws Exception {
+		scanner = new Scanner(PATH + fileName);
+		parser = new Parser(scanner);
+	}
 
 	@Test
 	void testParserCorretto1() throws Exception {
-		Scanner scanner = new Scanner(PATH + "/testParserCorretto1.txt");
-		Parser parser = new Parser(scanner);
-		assertDoesNotThrow(() -> {
-			parser.parse();
-		});
+		inizializzaParser("testParserCorretto1.txt");
+		assertDoesNotThrow(() -> parser.parse());
 	}
 
 	@Test
 	void testParserCorretto2() throws Exception {
-		Scanner scanner = new Scanner(PATH + "/testParserCorretto2.txt");
-		Parser parser = new Parser(scanner);
-		assertDoesNotThrow(() -> {
-			parser.parse();
-		});
+		inizializzaParser("testParserCorretto2.txt");
+		assertDoesNotThrow(() -> parser.parse());
 	}
 
 	@Test
 	void testParserEcc_0() throws Exception {
-		Scanner scanner = new Scanner(PATH + "/testParserEcc_0.txt");
-		Parser parser = new Parser(scanner);
-		SyntacticException e = assertThrows(SyntacticException.class, () -> {
-			parser.parse();
-		});
-		assertEquals("Token non atteso SEMI a riga 1", e.getMessage());
+		inizializzaParser("testParserEcc_0.txt");
+		SyntacticException e = assertThrows(SyntacticException.class, () -> parser.parse());
+		assertEquals("Token non atteso SEMI a riga 1, atteso '=' o operatore di assegnamento", e.getMessage());
 	}
 
 	@Test
 	void testParserEcc_1() throws Exception {
-		Scanner scanner = new Scanner(PATH + "/testParserEcc_1.txt");
-		Parser parser = new Parser(scanner);
-		SyntacticException e = assertThrows(SyntacticException.class, () -> {
-			parser.parse();
-		});
-		assertEquals("Token non atteso TIMES a riga 2", e.getMessage());
+		inizializzaParser("testParserEcc_1.txt");
+		SyntacticException e = assertThrows(SyntacticException.class, () -> parser.parse());
+		assertEquals("Token non atteso TIMES a riga 2, atteso valore (INT, FLOAT o ID)", e.getMessage());
 	}
 
 	@Test
 	void testParserEcc_2() throws Exception {
-		Scanner scanner = new Scanner(PATH + "/testParserEcc_2.txt");
-		Parser parser = new Parser(scanner);
-		SyntacticException exc = assertThrows(SyntacticException.class, () -> {
-			parser.parse();
-		});
+		inizializzaParser("testParserEcc_2.txt");
+		SyntacticException exc = assertThrows(SyntacticException.class, () -> parser.parse());
 		assertEquals("Token non atteso INT a riga 3", exc.getMessage());
 	}
 
 	@Test
 	void testParserEcc_3() throws Exception {
-		Scanner scanner = new Scanner(PATH + "/testParserEcc_3.txt");
-		Parser parser = new Parser(scanner);
-		SyntacticException e = assertThrows(SyntacticException.class, () -> {
-			parser.parse();
-		});
-		assertEquals("Token non atteso PLUS a riga 2", e.getMessage());
+		inizializzaParser("testParserEcc_3.txt");
+		SyntacticException e = assertThrows(SyntacticException.class, () -> parser.parse());
+		assertEquals("Token non atteso PLUS a riga 2, atteso '=' o operatore di assegnamento", e.getMessage());
 	}
 
 	@Test
 	void testParserEcc_4() throws Exception {
-		Scanner scanner = new Scanner(PATH + "/testParserEcc_4.txt");
-		Parser parser = new Parser(scanner);
-		SyntacticException e = assertThrows(SyntacticException.class, () -> {
-			parser.parse();
-		});
+		inizializzaParser("testParserEcc_4.txt");
+		SyntacticException e = assertThrows(SyntacticException.class, () -> parser.parse());
 		assertEquals("Atteso ID, ma trovato INT a riga 2", e.getMessage());
 	}
 
 	@Test
 	void testParserEcc_5() throws Exception {
-		Scanner scanner = new Scanner(PATH + "/testParserEcc_5.txt");
-		Parser parser = new Parser(scanner);
-		SyntacticException e = assertThrows(SyntacticException.class, () -> {
-			parser.parse();
-		});
+		inizializzaParser("testParserEcc_5.txt");
+		SyntacticException e = assertThrows(SyntacticException.class, () -> parser.parse());
 		assertEquals("Atteso ID, ma trovato INT a riga 3", e.getMessage());
 	}
 
 	@Test
 	void testParserEcc_6() throws Exception {
-		Scanner scanner = new Scanner(PATH + "/testParserEcc_6.txt");
-		Parser parser = new Parser(scanner);
-		SyntacticException e = assertThrows(SyntacticException.class, () -> {
-			parser.parse();
-		});
+		inizializzaParser("testParserEcc_6.txt");
+		SyntacticException e = assertThrows(SyntacticException.class, () -> parser.parse());
 		assertEquals("Atteso ID, ma trovato TYFLOAT a riga 3", e.getMessage());
 	}
 
 	@Test
 	void testParserEcc_7() throws Exception {
-		Scanner scanner = new Scanner(PATH + "/testParserEcc_7.txt");
-		Parser parser = new Parser(scanner);
-		SyntacticException e = assertThrows(SyntacticException.class, () -> {
-			parser.parse();
-		});
+		inizializzaParser("testParserEcc_7.txt");
+		SyntacticException e = assertThrows(SyntacticException.class, () -> parser.parse());
 		assertEquals("Atteso ID, ma trovato ASSIGN a riga 2", e.getMessage());
 	}
 
 	@Test
 	void testParserSoloDich() throws Exception {
-		Scanner scanner = new Scanner(PATH + "/testSoloDich.txt");
-		Parser parser = new Parser(scanner);
-		assertDoesNotThrow(() -> {
-			parser.parse();
-		});
+		inizializzaParser("testSoloDich.txt");
+		assertDoesNotThrow(() -> parser.parse());
 	}
 
 	@Test
 	void testParserEcc_9() throws Exception {
-		Scanner scanner = new Scanner(PATH + "/testSoloDichPrint.txt");
-		Parser parser = new Parser(scanner);
-		assertDoesNotThrow(() -> {
-			parser.parse();
-		});
+		inizializzaParser("testSoloDichPrint.txt");
+		assertDoesNotThrow(() -> parser.parse());
 	}
 
 	@Test
 	void testASTSoloDichiarazioni() throws Exception {
-		Scanner scanner = new Scanner(PATH + "testSoloDich.txt");
-		Parser parser = new Parser(scanner);
+		inizializzaParser("testSoloDich.txt");
 		NodeProgram ast = parser.parse();
 
 		assertNotNull(ast);
-		String expected = "NodeProgram [decSts=[NodeDecl [id=NodeId [name=x], type=INT, init=null], NodeDecl [id=NodeId [name=floati], type=FLOAT, init=null]]]";
-		assertEquals(expected, ast.toString());
+		String astAtteso = "NodeProgram [decSts=[NodeDecl [id=NodeId [name=x], type=INT, init=null], NodeDecl [id=NodeId [name=floati], type=FLOAT, init=null]]]";
+		assertEquals(astAtteso, ast.toString());
 	}
 
 	@Test
 	void testASTDichiarazioniEPrint() throws Exception {
-		Scanner scanner = new Scanner(PATH + "testSoloDichPrint.txt");
-		Parser parser = new Parser(scanner);
+		inizializzaParser("testSoloDichPrint.txt");
 		NodeProgram ast = parser.parse();
 
 		assertNotNull(ast);
-		String expected = "NodeProgram [decSts=[NodeDecl [id=NodeId [name=temp], type=INT, init=null], NodePrint [id=NodeId [name=abc]]]]";
-		assertEquals(expected, ast.toString());
+		String astAtteso = "NodeProgram [decSts=[NodeDecl [id=NodeId [name=temp], type=INT, init=null], NodePrint [id=NodeId [name=abc]]]]";
+		assertEquals(astAtteso, ast.toString());
+	}
+
+	@Test
+	void testASTGenerale() throws Exception {
+		inizializzaParser("testParserCorretto1.txt");
+		NodeProgram ast = parser.parse();
+
+		assertNotNull(ast);
+		String astAtteso = "NodeProgram [decSts=[NodePrint [id=NodeId [name=stampa]], NodeDecl [id=NodeId [name=numberfloat], type=FLOAT, init=NodeBinOp [op=+, left=NodeConst [valore=3.5, tipo=FLOAT], right=NodeConst [valore=8, tipo=INT]]], NodeDecl [id=NodeId [name=floati], type=INT, init=null], NodeAssign [id=NodeId [name=a], NodeExpr=NodeBinOp [op=+, left=NodeDeref [id=NodeId [name=a]], right=NodeBinOp [op=+, left=NodeConst [valore=5, tipo=INT], right=NodeConst [valore=3, tipo=INT]]]], NodeAssign [id=NodeId [name=b], NodeExpr=NodeBinOp [op=+, left=NodeDeref [id=NodeId [name=a]], right=NodeConst [valore=5, tipo=INT]]]]]";
+		assertEquals(astAtteso, ast.toString());
 	}
 }

@@ -9,6 +9,7 @@ import ast.NodeDeref;
 import ast.NodeId;
 import ast.NodePrint;
 import ast.NodeProgram;
+import symbolTable.Attributes;
 import symbolTable.SymbolTable;
 import visitor.codegen.Registri;
 
@@ -51,7 +52,7 @@ public class CodeGeneratorVisitor implements IVisitor {
 			return;
 		}
 
-		SymbolTable.Attributes attr = SymbolTable.lookUp(node.getId().getName());
+		Attributes attr = SymbolTable.lookUp(node.getId().getName());
 		attr.setRegistro(registro);
 
 		if (node.getInit() != null) {
@@ -71,7 +72,7 @@ public class CodeGeneratorVisitor implements IVisitor {
 		if (!log.isEmpty())
 			return;
 
-		char registro = node.getId().getSymbolAttributes().getRegistro();
+		char registro = node.getId().getAttributes().getRegistro();
 		codiceDc += "s" + registro + " ";
 	}
 
@@ -80,7 +81,7 @@ public class CodeGeneratorVisitor implements IVisitor {
 		if (!log.isEmpty())
 			return;
 
-		char registro = node.getId().getSymbolAttributes().getRegistro();
+		char registro = node.getId().getAttributes().getRegistro();
 		codiceDc += "l" + registro + " p P ";
 	}
 
@@ -112,7 +113,7 @@ public class CodeGeneratorVisitor implements IVisitor {
 		if (!log.isEmpty())
 			return;
 
-		char registro = node.getId().getSymbolAttributes().getRegistro();
+		char registro = node.getId().getAttributes().getRegistro();
 		codiceDc += "l" + registro + " ";
 	}
 

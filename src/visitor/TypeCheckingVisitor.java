@@ -11,6 +11,7 @@ import ast.NodeDeref;
 import ast.NodeId;
 import ast.NodePrint;
 import ast.NodeProgram;
+import symbolTable.Attributes;
 import symbolTable.SymbolTable;
 import visitor.type.ErrorType;
 import visitor.type.FloatType;
@@ -69,12 +70,12 @@ public class TypeCheckingVisitor implements IVisitor {
 
 	@Override
 	public void visit(NodeId node) {
-		SymbolTable.Attributes attributes = SymbolTable.lookUp(node.getName());
+		Attributes attributes = SymbolTable.lookUp(node.getName());
 
 		if (attributes == null) {
 			this.resType = new ErrorType("Errore semantico: " + node.getName() + " non è stato dichiarato!");
 		} else {
-			node.setSymbolAttributes(attributes);
+			node.setAttributes(attributes);
 			this.resType = (attributes.getTipo() == LangType.INT) ? new IntType() : new FloatType();
 		}
 	}
@@ -82,16 +83,16 @@ public class TypeCheckingVisitor implements IVisitor {
 	@Override
 	public void visit(NodeDecl node) {
 
-		SymbolTable.Attributes nodoEsistente = SymbolTable.lookUp(node.getId().getName());
+		Attributes nodoEsistente = SymbolTable.lookUp(node.getId().getName());
 
 		if (nodoEsistente != null) {
 			this.resType = new ErrorType("Errore semantico: " + node.getId().getName() + " già dichiarato!");
 			return;
 		}
 
-		SymbolTable.Attributes nuovaVar = new SymbolTable.Attributes(node.getType());
+		Attributes nuovaVar = new Attributes(node.getType());
 		SymbolTable.enter(node.getId().getName(), nuovaVar);
-		node.getId().setSymbolAttributes(nuovaVar);
+		node.getId().setAttributes(nuovaVar);
 
 		// Se c'è un'inizializzazione, verifica la compatibilità dei tipi
 		if (node.getInit() != null) {

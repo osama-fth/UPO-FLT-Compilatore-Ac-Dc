@@ -14,10 +14,15 @@ import token.TokenType;
 public class TestScanner {
 
 	private static final String PATH = "src/test/data/testScanner/";
+	private Scanner scanner;
+
+	private void inizializzaScanner(String fileName) throws Exception {
+		scanner = new Scanner(PATH + fileName);
+	}
 
 	@Test
 	void testEOF() throws Exception {
-		Scanner scanner = new Scanner(PATH + "testEOF.txt");
+		inizializzaScanner("testEOF.txt");
 		Token t = scanner.nextToken();
 		assertEquals(TokenType.EOF, t.getTipo());
 		assertTrue(t.getRiga() == 4);
@@ -25,14 +30,14 @@ public class TestScanner {
 
 	@Test
 	void testCaratteriSkip() throws Exception {
-		Scanner scanner = new Scanner(PATH + "caratteriSkip");
+		inizializzaScanner("caratteriSkip");
 		Token t = scanner.nextToken();
 		assertEquals(TokenType.EOF, t.getTipo());
 	}
 
 	@Test
 	void testInt() throws Exception {
-		Scanner scanner = new Scanner(PATH + "testInt.txt");
+		inizializzaScanner("testInt.txt");
 
 		Exception e = assertThrows(LexicalException.class, () -> {
 			scanner.nextToken();
@@ -42,12 +47,12 @@ public class TestScanner {
 		Token t = scanner.nextToken();
 		assertEquals(TokenType.INT, t.getTipo());
 		assertEquals(2, t.getRiga());
-		assertEquals("698", t.getValore());
+		assertEquals("698", t.getVal());
 	}
 
 	@Test
 	void testFloat() throws Exception {
-		Scanner scanner = new Scanner(PATH + "testFloat.txt");
+		inizializzaScanner("testFloat.txt");
 
 		Exception e = assertThrows(LexicalException.class, () -> {
 			scanner.nextToken();
@@ -69,37 +74,37 @@ public class TestScanner {
 		Token t = scanner.nextToken();
 		assertEquals(TokenType.FLOAT, t.getTipo());
 		assertEquals(5, t.getRiga());
-		assertEquals("89.99999", t.getValore());
+		assertEquals("89.99999", t.getVal());
 	}
 
 	@Test
 	void testId() throws Exception {
-		Scanner scanner = new Scanner(PATH + "testId.txt");
+		inizializzaScanner("testId.txt");
 
 		Token t = scanner.nextToken();
 		assertEquals(TokenType.ID, t.getTipo());
 		assertEquals(1, t.getRiga());
-		assertEquals("jskjdsf2jdshkf", t.getValore());
+		assertEquals("jskjdsf2jdshkf", t.getVal());
 
 		Token t1 = scanner.nextToken();
 		assertEquals(TokenType.ID, t1.getTipo());
 		assertEquals(2, t1.getRiga());
-		assertEquals("printl", t1.getValore());
+		assertEquals("printl", t1.getVal());
 
 		Token t2 = scanner.nextToken();
 		assertEquals(TokenType.ID, t2.getTipo());
 		assertEquals(4, t2.getRiga());
-		assertEquals("ffloat", t2.getValore());
+		assertEquals("ffloat", t2.getVal());
 
 		Token t3 = scanner.nextToken();
 		assertEquals(TokenType.ID, t3.getTipo());
 		assertEquals(6, t3.getRiga());
-		assertEquals("hhhjj", t3.getValore());
+		assertEquals("hhhjj", t3.getVal());
 	}
 
 	@Test
 	void testKeywords() throws Exception {
-		Scanner scanner = new Scanner(PATH + "testKeywords.txt");
+		inizializzaScanner("testKeywords.txt");
 
 		Token t = scanner.nextToken();
 		assertEquals(t.getTipo(), TokenType.PRINT);
@@ -113,7 +118,7 @@ public class TestScanner {
 
 	@Test
 	void testIdKeyWords() throws Exception {
-		Scanner scanner = new Scanner(PATH + "testIdKeyWords.txt");
+		inizializzaScanner("testIdKeyWords.txt");
 
 		int ContatoreId = 0;
 		int ContatoreKeyWords = 0;
@@ -138,7 +143,7 @@ public class TestScanner {
 
 	@Test
 	void testOpsDels() throws Exception {
-		Scanner scanner = new Scanner(PATH + "testOpsDels.txt");
+		inizializzaScanner("testOpsDels.txt");
 
 		int ContatoreDels = 0;
 		int ContatoreOp = 0;
@@ -170,7 +175,7 @@ public class TestScanner {
 
 	@Test
 	void testGenerale() throws Exception {
-		Scanner scanner = new Scanner(PATH + "testGenerale.txt");
+		inizializzaScanner("testGenerale.txt");
 
 		Exception e = assertThrows(LexicalException.class, () -> {
 			while (true) {
@@ -184,7 +189,7 @@ public class TestScanner {
 
 	@Test
 	void testCaratteriNonCaratteri() throws Exception {
-		Scanner scanner = new Scanner(PATH + "caratteriNonCaratteri.txt");
+		inizializzaScanner("caratteriNonCaratteri.txt");
 
 		Exception e = assertThrows(LexicalException.class, () -> {
 			while (true) {
@@ -197,7 +202,7 @@ public class TestScanner {
 
 	@Test
 	void testErroriNumbers() throws Exception {
-		Scanner scanner = new Scanner(PATH + "erroriNumbers.txt");
+		inizializzaScanner("erroriNumbers.txt");
 
 		Exception e = assertThrows(LexicalException.class, () -> {
 			scanner.nextToken();
@@ -217,10 +222,10 @@ public class TestScanner {
 
 	@Test
 	void testPeekToken() throws Exception {
-		Scanner s = new Scanner(PATH + "testGenerale.txt");
-		assertEquals(TokenType.TYINT, s.peekToken().getTipo());
-		assertEquals(TokenType.TYINT, s.nextToken().getTipo());
-		assertEquals(TokenType.ID, s.peekToken().getTipo());
-		assertEquals(TokenType.ID, s.nextToken().getTipo());
+		inizializzaScanner("testGenerale.txt");
+		assertEquals(TokenType.TYINT, scanner.peekToken().getTipo());
+		assertEquals(TokenType.TYINT, scanner.nextToken().getTipo());
+		assertEquals(TokenType.ID, scanner.peekToken().getTipo());
+		assertEquals(TokenType.ID, scanner.nextToken().getTipo());
 	}
 }

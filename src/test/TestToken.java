@@ -13,7 +13,7 @@ public class TestToken {
 	void testCostruttore1() {
 		Token t = new Token(0, TokenType.INT, "3");
 		assertEquals(TokenType.INT, t.getTipo());
-		assertEquals("3", t.getValore());
+		assertEquals("3", t.getVal());
 		assertEquals(0, t.getRiga());
 		assertEquals("<INT, r:0, val:3>", t.toString());
 	}
@@ -22,6 +22,7 @@ public class TestToken {
 	void testCostruttore2() {
 		Token t = new Token(1, TokenType.PLUS);
 		assertEquals(TokenType.PLUS, t.getTipo());
+		assertEquals(1, t.getRiga());
 		assertEquals("<PLUS, r:1>", t.toString());
 	}
 }
