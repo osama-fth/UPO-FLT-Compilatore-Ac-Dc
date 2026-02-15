@@ -22,7 +22,7 @@ public class ErrorType extends TypeDescriptor {
 	}
 
 	@Override
-	public TypeDescriptor getType() {
+	public TypeDescriptor getTipo() {
 		return new ErrorType(this.msg);
 	}
 }

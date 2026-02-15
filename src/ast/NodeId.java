@@ -26,7 +26,7 @@ public class NodeId extends NodeAST {
 	public void accept(IVisitor visitor) {
 		visitor.visit(this);
 	}
-	
+
 	public Attributes getAttributes() {
 		return attributes;
 	}

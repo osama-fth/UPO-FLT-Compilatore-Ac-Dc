@@ -11,7 +11,7 @@ public class IntType extends TypeDescriptor {
 	}
 
 	@Override
-	public TypeDescriptor getType() {
+	public TypeDescriptor getTipo() {
 		return new IntType();
 	}
 

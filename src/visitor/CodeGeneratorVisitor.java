@@ -43,8 +43,9 @@ public class CodeGeneratorVisitor implements IVisitor {
 
 	@Override
 	public void visit(NodeDecl node) {
-		if (!log.isEmpty())
+		if (!log.isEmpty()) {
 			return;
+		}
 
 		char registro = Registri.newRegister();
 		if (registro == ' ') {
@@ -57,20 +58,23 @@ public class CodeGeneratorVisitor implements IVisitor {
 
 		if (node.getInit() != null) {
 			node.getInit().accept(this);
-			if (!log.isEmpty())
+			if (!log.isEmpty()) {
 				return;
+			}
 			codiceDc += "s" + registro + " ";
 		}
 	}
 
 	@Override
 	public void visit(NodeAssign node) {
-		if (!log.isEmpty())
+		if (!log.isEmpty()) {
 			return;
+		}
 
 		node.getExpr().accept(this);
-		if (!log.isEmpty())
+		if (!log.isEmpty()) {
 			return;
+		}
 
 		char registro = node.getId().getAttributes().getRegistro();
 		codiceDc += "s" + registro + " ";
@@ -78,8 +82,9 @@ public class CodeGeneratorVisitor implements IVisitor {
 
 	@Override
 	public void visit(NodePrint node) {
-		if (!log.isEmpty())
+		if (!log.isEmpty()) {
 			return;
+		}
 
 		char registro = node.getId().getAttributes().getRegistro();
 		codiceDc += "l" + registro + " p P ";
@@ -87,16 +92,19 @@ public class CodeGeneratorVisitor implements IVisitor {
 
 	@Override
 	public void visit(NodeBinOp node) {
-		if (!log.isEmpty())
+		if (!log.isEmpty()) {
 			return;
+		}
 
 		node.getLeft().accept(this);
-		if (!log.isEmpty())
+		if (!log.isEmpty()) {
 			return;
+		}
 
 		node.getRight().accept(this);
-		if (!log.isEmpty())
+		if (!log.isEmpty()) {
 			return;
+		}
 
 		switch (node.getOp()) {
 		case PLUS -> codiceDc += "+ ";
@@ -110,8 +118,9 @@ public class CodeGeneratorVisitor implements IVisitor {
 
 	@Override
 	public void visit(NodeDeref node) {
-		if (!log.isEmpty())
+		if (!log.isEmpty()) {
 			return;
+		}
 
 		char registro = node.getId().getAttributes().getRegistro();
 		codiceDc += "l" + registro + " ";
@@ -119,8 +128,9 @@ public class CodeGeneratorVisitor implements IVisitor {
 
 	@Override
 	public void visit(NodeConst node) {
-		if (!log.isEmpty())
+		if (!log.isEmpty()) {
 			return;
+		}
 
 		codiceDc += node.getValore() + " ";
 	}

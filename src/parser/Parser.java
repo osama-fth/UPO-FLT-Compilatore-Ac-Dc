@@ -65,13 +65,13 @@ public class Parser {
 		Token tk = getNextToken();
 
 		switch (tk.getTipo()) {
-			case TYFLOAT, TYINT, ID, PRINT, EOF -> {
-				ArrayList<NodeDecSt> decSts = parseDSs();
-				match(TokenType.EOF);
-				return new NodeProgram(decSts);
-			}
-			default -> throw new SyntacticException(
-					"Token " + tk.getTipo() + " a riga " + tk.getRiga() + " non è inizio di programma valido");
+		case TYFLOAT, TYINT, ID, PRINT, EOF -> {
+			ArrayList<NodeDecSt> decSts = parseDSs();
+			match(TokenType.EOF);
+			return new NodeProgram(decSts);
+		}
+		default -> throw new SyntacticException(
+				"Token " + tk.getTipo() + " a riga " + tk.getRiga() + " non è inizio di programma valido");
 		}
 	}
 
@@ -83,20 +83,20 @@ public class Parser {
 		ArrayList<NodeDecSt> nodeDecSts = new ArrayList<>();
 
 		switch (tk.getTipo()) {
-			case TYFLOAT, TYINT -> { // DSs -> Dcl DSs
-				nodeDecSts.add(parseDcl());
-				nodeDecSts.addAll(parseDSs());
-			}
+		case TYFLOAT, TYINT -> { // DSs -> Dcl DSs
+			nodeDecSts.add(parseDcl());
+			nodeDecSts.addAll(parseDSs());
+		}
 
-			case ID, PRINT -> { // DSs -> Stm DSs
-				nodeDecSts.add(parseStm());
-				nodeDecSts.addAll(parseDSs());
-			}
+		case ID, PRINT -> { // DSs -> Stm DSs
+			nodeDecSts.add(parseStm());
+			nodeDecSts.addAll(parseDSs());
+		}
 
-			case EOF -> { // DSs -> ϵ
-			}
+		case EOF -> { // DSs -> ϵ
+		}
 
-			default -> throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga());
+		default -> throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga());
 		}
 
 		return nodeDecSts;
@@ -119,20 +119,20 @@ public class Parser {
 		Token tk = getNextToken();
 
 		switch (tk.getTipo()) {
-			case SEMI -> {
-				match(TokenType.SEMI);
-				return null;
-			}
+		case SEMI -> {
+			match(TokenType.SEMI);
+			return null;
+		}
 
-			case ASSIGN -> {
-				match(TokenType.ASSIGN);
-				NodeExpr init = parseExp();
-				match(TokenType.SEMI);
-				return init;
-			}
+		case ASSIGN -> {
+			match(TokenType.ASSIGN);
+			NodeExpr init = parseExp();
+			match(TokenType.SEMI);
+			return init;
+		}
 
-			default -> throw new SyntacticException(
-					"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso ';' o '='");
+		default -> throw new SyntacticException(
+				"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso ';' o '='");
 		}
 	}
 
@@ -143,38 +143,38 @@ public class Parser {
 		Token tk = getNextToken();
 
 		switch (tk.getTipo()) {
-			case ID -> {
-				NodeId nodeId = new NodeId(match(TokenType.ID).getVal());
-				Token tkOp = parseOp();
-				NodeExpr nodeExpr = parseExp();
-				match(TokenType.SEMI);
+		case ID -> {
+			NodeId nodeId = new NodeId(match(TokenType.ID).getVal());
+			Token tkOp = parseOp();
+			NodeExpr nodeExpr = parseExp();
+			match(TokenType.SEMI);
 
-				if (tkOp.getTipo() == TokenType.ASSIGN) {
-					return new NodeAssign(nodeId, nodeExpr);
-				} else {
-					LangOperation langOper = switch (tkOp.getVal()) {
-						case "+=" -> LangOperation.PLUS;
-						case "-=" -> LangOperation.MINUS;
-						case "*=" -> LangOperation.TIMES;
-						case "/=" -> LangOperation.DIVIDE;
-						default -> throw new SyntacticException(
-								"Operatore assegnamento non valido: " + tkOp.getVal() + " a riga " + tkOp.getRiga());
-					};
+			if (tkOp.getTipo() == TokenType.ASSIGN) {
+				return new NodeAssign(nodeId, nodeExpr);
+			} else {
+				LangOperation langOper = switch (tkOp.getVal()) {
+				case "+=" -> LangOperation.PLUS;
+				case "-=" -> LangOperation.MINUS;
+				case "*=" -> LangOperation.TIMES;
+				case "/=" -> LangOperation.DIVIDE;
+				default -> throw new SyntacticException(
+						"Operatore assegnamento non valido: " + tkOp.getVal() + " a riga " + tkOp.getRiga());
+				};
 
-					NodeExpr newRight = new NodeBinOp(langOper, new NodeDeref(nodeId), nodeExpr);
-					return new NodeAssign(nodeId, newRight);
-				}
+				NodeExpr newRight = new NodeBinOp(langOper, new NodeDeref(nodeId), nodeExpr);
+				return new NodeAssign(nodeId, newRight);
 			}
+		}
 
-			case PRINT -> {
-				match(TokenType.PRINT);
-				NodeId nodeId = new NodeId(match(TokenType.ID).getVal());
-				match(TokenType.SEMI);
-				return new NodePrint(nodeId);
-			}
+		case PRINT -> {
+			match(TokenType.PRINT);
+			NodeId nodeId = new NodeId(match(TokenType.ID).getVal());
+			match(TokenType.SEMI);
+			return new NodePrint(nodeId);
+		}
 
-			default -> throw new SyntacticException(
-					"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso ID o 'print'");
+		default -> throw new SyntacticException(
+				"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso ID o 'print'");
 		}
 	}
 
@@ -193,22 +193,22 @@ public class Parser {
 		Token tk = getNextToken();
 
 		switch (tk.getTipo()) {
-			case PLUS -> {
-				match(TokenType.PLUS);
-				return parseExpP(new NodeBinOp(LangOperation.PLUS, left, parseTr()));
-			}
+		case PLUS -> {
+			match(TokenType.PLUS);
+			return parseExpP(new NodeBinOp(LangOperation.PLUS, left, parseTr()));
+		}
 
-			case MINUS -> {
-				match(TokenType.MINUS);
-				return parseExpP(new NodeBinOp(LangOperation.MINUS, left, parseTr()));
-			}
+		case MINUS -> {
+			match(TokenType.MINUS);
+			return parseExpP(new NodeBinOp(LangOperation.MINUS, left, parseTr()));
+		}
 
-			case SEMI -> {
-				return left;
-			}
+		case SEMI -> {
+			return left;
+		}
 
-			default -> throw new SyntacticException(
-					"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso '+', '-' o ';'");
+		default -> throw new SyntacticException(
+				"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso '+', '-' o ';'");
 		}
 	}
 
@@ -227,22 +227,22 @@ public class Parser {
 		Token tk = getNextToken();
 
 		switch (tk.getTipo()) {
-			case TIMES -> {
-				match(TokenType.TIMES);
-				return parseTrP(new NodeBinOp(LangOperation.TIMES, left, parseVal()));
-			}
+		case TIMES -> {
+			match(TokenType.TIMES);
+			return parseTrP(new NodeBinOp(LangOperation.TIMES, left, parseVal()));
+		}
 
-			case DIVIDE -> {
-				match(TokenType.DIVIDE);
-				return parseTrP(new NodeBinOp(LangOperation.DIVIDE, left, parseVal()));
-			}
+		case DIVIDE -> {
+			match(TokenType.DIVIDE);
+			return parseTrP(new NodeBinOp(LangOperation.DIVIDE, left, parseVal()));
+		}
 
-			case PLUS, MINUS, SEMI -> {
-				return left;
-			}
+		case PLUS, MINUS, SEMI -> {
+			return left;
+		}
 
-			default -> throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga()
-					+ ", atteso '*', '/', '+', '-' o ';'");
+		default -> throw new SyntacticException(
+				"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso '*', '/', '+', '-' o ';'");
 		}
 	}
 
@@ -253,18 +253,18 @@ public class Parser {
 		Token tk = getNextToken();
 
 		switch (tk.getTipo()) {
-			case TYFLOAT -> {
-				match(TokenType.TYFLOAT);
-				return LangType.FLOAT;
-			}
+		case TYFLOAT -> {
+			match(TokenType.TYFLOAT);
+			return LangType.FLOAT;
+		}
 
-			case TYINT -> {
-				match(TokenType.TYINT);
-				return LangType.INT;
-			}
+		case TYINT -> {
+			match(TokenType.TYINT);
+			return LangType.INT;
+		}
 
-			default -> throw new SyntacticException(
-					"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso 'float' o 'int'");
+		default -> throw new SyntacticException(
+				"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso 'float' o 'int'");
 		}
 	}
 
@@ -275,23 +275,23 @@ public class Parser {
 		Token tk = getNextToken();
 
 		switch (tk.getTipo()) {
-			case INT -> {
-				Token matched = match(TokenType.INT);
-				return new NodeConst(matched.getVal(), LangType.INT);
-			}
+		case INT -> {
+			Token matched = match(TokenType.INT);
+			return new NodeConst(matched.getVal(), LangType.INT);
+		}
 
-			case FLOAT -> {
-				Token matched = match(TokenType.FLOAT);
-				return new NodeConst(matched.getVal(), LangType.FLOAT);
-			}
+		case FLOAT -> {
+			Token matched = match(TokenType.FLOAT);
+			return new NodeConst(matched.getVal(), LangType.FLOAT);
+		}
 
-			case ID -> {
-				Token matched = match(TokenType.ID);
-				return new NodeDeref(new NodeId(matched.getVal()));
-			}
+		case ID -> {
+			Token matched = match(TokenType.ID);
+			return new NodeDeref(new NodeId(matched.getVal()));
+		}
 
-			default -> throw new SyntacticException("Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga()
-					+ ", atteso valore (INT, FLOAT o ID)");
+		default -> throw new SyntacticException(
+				"Token non atteso " + tk.getTipo() + " a riga " + tk.getRiga() + ", atteso valore (INT, FLOAT o ID)");
 		}
 	}
 

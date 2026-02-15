@@ -28,7 +28,7 @@ public class TypeCheckingVisitor implements IVisitor {
 	}
 
 	public TypeDescriptor getResType() {
-		return this.resType.getType();
+		return this.resType.getTipo();
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class TypeCheckingVisitor implements IVisitor {
 				if (!idType.compatibile(exprType)) {
 					this.resType = new ErrorType("Errore semantico: assegnamento a tipo non corrispondente!");
 				} else {
-					this.resType = idType.getType();
+					this.resType = idType.getTipo();
 				}
 			}
 		}
@@ -123,11 +123,11 @@ public class TypeCheckingVisitor implements IVisitor {
 	@Override
 	public void visit(NodeBinOp node) {
 		node.getLeft().accept(this);
-		TypeDescriptor leftTD = this.resType.getType();
+		TypeDescriptor leftTD = this.resType.getTipo();
 
 		if (leftTD.getClass() != ErrorType.class) {
 			node.getRight().accept(this);
-			TypeDescriptor rightTD = this.resType.getType();
+			TypeDescriptor rightTD = this.resType.getTipo();
 
 			if (rightTD.getClass() != ErrorType.class) {
 

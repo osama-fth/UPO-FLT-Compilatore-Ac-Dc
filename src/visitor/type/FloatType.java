@@ -11,7 +11,7 @@ public class FloatType extends TypeDescriptor {
 	}
 
 	@Override
-	public TypeDescriptor getType() {
+	public TypeDescriptor getTipo() {
 		return new FloatType();
 	}
 
