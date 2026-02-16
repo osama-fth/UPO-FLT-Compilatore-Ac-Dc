@@ -29,7 +29,7 @@ public class SymbolTable {
 		return table.size();
 	}
 
-	public static void clearTable() {
+	public static void pulisciTabella() {
 		table.clear();
 	}
 }

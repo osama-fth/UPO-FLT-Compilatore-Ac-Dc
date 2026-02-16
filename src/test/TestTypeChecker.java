@@ -23,7 +23,7 @@ class TestTypeChecker {
 	@BeforeEach
 	void setUp() {
 		typChecker = new TypeCheckingVisitor();
-		SymbolTable.clearTable();
+		SymbolTable.pulisciTabella();
 	}
 
 	private void inizializzaParser(String fileName) throws Exception {

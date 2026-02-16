@@ -25,11 +25,11 @@ class TestCodeGenerator {
 
 	@BeforeEach
 	void setUp() {
-		SymbolTable.clearTable();
+		SymbolTable.pulisciTabella();
 		Registri.reset();
 	}
 
-	void inizializza(String fileName) throws Exception {
+	void inizializzaCodeGenerator(String fileName) throws Exception {
 		scanner = new Scanner(PATH + fileName);
 		parser = new Parser(scanner);
 		program = parser.parse();
@@ -39,7 +39,7 @@ class TestCodeGenerator {
 
 	@Test
 	void testAssign() throws Exception {
-		inizializza("1_assign.txt");
+		inizializzaCodeGenerator("1_assign.txt");
 		CodeGeneratorVisitor codeGen = new CodeGeneratorVisitor();
 		codeGen.visit(program);
 
@@ -49,7 +49,7 @@ class TestCodeGenerator {
 
 	@Test
 	void testDivisioni() throws Exception {
-		inizializza("2_divsioni.txt");
+		inizializzaCodeGenerator("2_divsioni.txt");
 		CodeGeneratorVisitor codeGen = new CodeGeneratorVisitor();
 		codeGen.visit(program);
 
@@ -60,7 +60,7 @@ class TestCodeGenerator {
 
 	@Test
 	void testGenerale() throws Exception {
-		inizializza("3_generale.txt");
+		inizializzaCodeGenerator("3_generale.txt");
 		CodeGeneratorVisitor codeGen = new CodeGeneratorVisitor();
 		codeGen.visit(program);
 
@@ -71,7 +71,7 @@ class TestCodeGenerator {
 
 	@Test
 	void testRegistriFiniti() throws Exception {
-		inizializza("4_registriFiniti.txt");
+		inizializzaCodeGenerator("4_registriFiniti.txt");
 		CodeGeneratorVisitor codeGen = new CodeGeneratorVisitor();
 		codeGen.visit(program);
 
