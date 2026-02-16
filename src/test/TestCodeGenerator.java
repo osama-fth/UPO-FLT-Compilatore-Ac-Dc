@@ -18,6 +18,10 @@ import visitor.codegen.Registri;
 class TestCodeGenerator {
 
 	private static final String PATH = "src/test/data/testCodeGenerator/";
+	Scanner scanner;
+	Parser parser;
+	NodeProgram program;
+	TypeCheckingVisitor typeChecker;
 
 	@BeforeEach
 	void setUp() {
@@ -25,15 +29,17 @@ class TestCodeGenerator {
 		Registri.reset();
 	}
 
+	void inizializza(String fileName) throws Exception {
+		scanner = new Scanner(PATH + fileName);
+		parser = new Parser(scanner);
+		program = parser.parse();
+		typeChecker = new TypeCheckingVisitor();
+		typeChecker.visit(program);
+	}
+
 	@Test
 	void testAssign() throws Exception {
-		Scanner scanner = new Scanner(PATH + "1_assign.txt");
-		Parser parser = new Parser(scanner);
-		NodeProgram program = parser.parse();
-
-		TypeCheckingVisitor typeChecker = new TypeCheckingVisitor();
-		typeChecker.visit(program);
-
+		inizializza("1_assign.txt");
 		CodeGeneratorVisitor codeGen = new CodeGeneratorVisitor();
 		codeGen.visit(program);
 
@@ -43,13 +49,7 @@ class TestCodeGenerator {
 
 	@Test
 	void testDivisioni() throws Exception {
-		Scanner scanner = new Scanner(PATH + "2_divsioni.txt");
-		Parser parser = new Parser(scanner);
-		NodeProgram program = parser.parse();
-
-		TypeCheckingVisitor typeChecker = new TypeCheckingVisitor();
-		typeChecker.visit(program);
-
+		inizializza("2_divsioni.txt");
 		CodeGeneratorVisitor codeGen = new CodeGeneratorVisitor();
 		codeGen.visit(program);
 
@@ -60,13 +60,7 @@ class TestCodeGenerator {
 
 	@Test
 	void testGenerale() throws Exception {
-		Scanner scanner = new Scanner(PATH + "3_generale.txt");
-		Parser parser = new Parser(scanner);
-		NodeProgram program = parser.parse();
-
-		TypeCheckingVisitor typeChecker = new TypeCheckingVisitor();
-		typeChecker.visit(program);
-
+		inizializza("3_generale.txt");
 		CodeGeneratorVisitor codeGen = new CodeGeneratorVisitor();
 		codeGen.visit(program);
 
@@ -77,13 +71,7 @@ class TestCodeGenerator {
 
 	@Test
 	void testRegistriFiniti() throws Exception {
-		Scanner scanner = new Scanner(PATH + "4_registriFiniti.txt");
-		Parser parser = new Parser(scanner);
-		NodeProgram program = parser.parse();
-
-		TypeCheckingVisitor typeChecker = new TypeCheckingVisitor();
-		typeChecker.visit(program);
-
+		inizializza("4_registriFiniti.txt");
 		CodeGeneratorVisitor codeGen = new CodeGeneratorVisitor();
 		codeGen.visit(program);
 
